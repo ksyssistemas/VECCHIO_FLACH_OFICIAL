@@ -1,0 +1,137 @@
+<?php
+$lang['lead_manager']                              = 'OPORTUNIDADES';
+$lang['lm_customer_name']                          = 'Nome';
+$lang['lm_customer_email']                         = 'E-mail';
+$lang['lm_staff_name']                             = 'Empresa';
+$lang['lm_created_date']                           = 'Data de Criação';
+$lang['lm_zoom_meeting']                           = 'Zoom Meeting';
+$lang['lm_is_client']                              = 'Cliente/Lead';
+$lang['lm_status']                                 = 'Status';
+$lang['lm_remark']                                 = 'Observação';
+$lang['lead_manager_client']                       = 'Clientes';
+$lang['lm_client']                                 = 'Cliente';
+$lang['lm_leads']                                   = 'Lead';
+$lang['lead_manager_dashboard']                    = 'Dashboard';
+$lang['lead_manager_lead']                	       = 'Gerenciador de Leads';
+$lang['lead_manager_dt_connect']                   = 'Lead Manager';
+$lang['lead_manger_activity']                      = 'Registro de Atividade';
+$lang['lead_manger_audio_call']                    = 'Chamada de Áudio';
+$lang['lead_manger_video_call']                    = 'Chamada de Vídeo';
+$lang['lead_manger_sms']                  	       = 'SMS';
+$lang['lead_manager_sms_modal_title']              = 'SMS Para: ';
+$lang['lead_manager_message_data']               	= 'Mensagem:';
+$lang['lead_manager_bulk_sms']          		   = 'SMS em Massa';
+$lang['zoom_meeting_duration']          	    	= 'Duração de Chamada(Minutos)';
+$lang['lead_name']          	                	= 'Nome';
+$lang['meeting_date']          	                 	= 'Data de Início da Chamada';
+$lang['meeting_join_link']          	        	= 'Entrar no link';
+$lang['meeting_start_link']          		        = 'Start Link';
+$lang['zoom_meeting_agenda']          	         	= 'Agenda da Chamada';
+$lang['lead_manager_zoom_meetings']          		= 'Chamadas';
+$lang['zoom_meeting_options']          		        = 'Zoom Meeting Opções';
+$lang['lead_manager_zoom_description']              = 'Descrição';
+$lang['allow_participants_to_join_anytime']         = 'Permitir que os participantes participem a qualquer momento';
+
+$lang['mute_participants_upon_entry']                                                   = 'Silenciar os participantes após a entrada';
+$lang['automatically_record_meeting_on_the_local_computer']                             = 'Gravar chamada automaticamente no computador local';
+$lang['approve_or_block_entry_for_users_from_specific_countries/regions']              = 'Aprovar ou bloquear a entrada de usuários de países/regiões específicos';
+
+$lang['lead_manger_all']                  				= 'Todos';
+$lang['lead_manger_activity_audio']                  	= 'Detalhes da chamada';
+$lang['lead_manger_activity_sms']                  		= 'Sms';
+$lang['lead_manger_activity_recordings']                = 'Gravações';
+$lang['lead_manger_call_start_time']                    = 'Início da Chamada';
+$lang['lead_manger_call_end_time']                      = 'Fim da Chamada';
+$lang['lead_manger_call_duration']                      = 'Duração da Chamada';
+$lang['lead_manger_permission_audio_call']              = 'Chamada de Áudio';
+$lang['lead_manger_permission_video_call']              = 'Chamada de Vídeo';
+$lang['lead_manger_permission_sms']                     = 'Enviar SMS';
+$lang['lead_manger_no_permission']                      = 'Sem Permissão!';
+$lang['lead_manager_twilio_number_not_assigned']        = 'Número Twilio não atribuído!';
+$lang['lead_manger_dt_follow_up']                       = 'Próximo acompanhamento';
+$lang['lead_manger_dt_follow_up_yes']                   = 'Sim';
+$lang['lead_manger_dt_follow_up_no']                    = 'NO';
+$lang['lead_manger_call_direction_title']               = 'Direção';
+$lang['lead_manger_call_recording_title']               = 'Gravado';
+
+# 16-11-2021
+
+$lang['lead_manager_lead_chats']                	   = 'SMS';
+$lang['manage_leads_heading']                	       = 'Manage Leads';
+$lang['lead_manager_period_year']                	   = 'Anos';
+$lang['lead_manager_period_month']                	   = 'Meses';
+$lang['lead_manager_conversation_serch_cont']          = 'Procurando contatos...';
+$lang['lm_module_activation_heading']                  = 'Lead Manager Module Activation';
+$lang['lm_module_not_register_alert']                  = 'Module is not registered!';
+
+# 13-01-2020
+
+$lang['lead_manger_permission_email']               = 'E-mail';
+$lang['lead_manager_lead_mailbox']                	= 'E-mails';
+$lang['lm_mailbox_to_label']                	   	= 'Para';
+$lang['lm_mailbox_cc_label']                	   	= 'CC';
+$lang['lm_mailbox_subject_label']                   = 'Assunto';
+$lang['lm_mailbox_compose_label']                	= 'Enviar E-mail';
+$lang['lm_mailbox_compose_li']                	   	= 'Enviar E-mail';
+$lang['lm_mailbox_inbox_li']                	   	= 'Caixa de Entrada';
+$lang['lm_mailbox_sent_li']                	   	    = 'Enviados';
+$lang['lm_mailbox_draft_li']                	   	= 'Rascunho';
+$lang['lm_mailbox_trash_li']                	   	= 'Lixeira';
+$lang['lm_mailbox_setting_li']                	   	= 'Opções';
+$lang['lm_mailbox_inbox_title']                	   	= 'Caixa de Entrada';
+$lang['lm_mailbox_from']                	   	    = 'De';
+$lang['lm_mailbox_subject']                	   	    = 'Assunto';
+$lang['lm_mailbox_attachments']                	    = 'Anexos';
+$lang['lm_mailbox_date']                	   	    = 'Data';
+$lang['lm_mailbox_cofiguration_title']              = 'Staff Mail Setup';
+
+$lang['lm_mb_is_smtp_field']           		= 'Is SMTP';
+$lang['lm_mb_smtp_enc_field']          		= 'SMTP Encryption';
+$lang['lm_mb_smtp_user_field']          	= 'SMTP User name';
+$lang['lm_mb_smtp_password_field']          = 'SMTP Password';
+$lang['lm_mb_is_smtp_field_title']          = 'if ON, it will send email from here!';
+$lang['lm_mb_smtp_server_field']            = 'SMTP Server address';
+
+$lang['lm_mb_is_imap_field']           		= 'Is IMAP';
+$lang['lm_mb_imap_enc_field']          		= 'IMAP Encryption';
+$lang['lm_mb_imap_user_field']          	= 'IMAP User name';
+$lang['lm_mb_imap_password_field']          = 'IMAP Password';
+$lang['lm_mb_is_imap_field_title']          = 'if ON, it will recieve email from here!';
+$lang['lm_mb_imap_server_field']            = 'IMAP Server address';
+$lang['lm_alert_failed_to_update']          = 'Failed to update!';
+$lang['lm_alert_success_to_update']        	= 'Updated!';
+$lang['lm_mb_smtp_port_field']            	= 'SMTP port';
+$lang['lm_mailbox_email_label']            	= 'Email';
+$lang['lm_mailbox_email_from_name']       	= 'From name : ';
+$lang['lm_mailbox_email_from_email']        = 'From email : ';
+$lang['lm_mailbox_email_subject']           = 'Subject : ';
+$lang['lm_mailbox_email_message']           = 'Message : ';
+$lang['lm_mailbox_email_forword']           = 'Forword';
+$lang['lm_mailbox_email_reply']            	= 'Reply';
+$lang['lm_mb_smtp_fromname']            	= 'SMTP From name';
+
+$lang['lm_mb_bulk_update_success_alert_star']                    	= 'Marcado como favorável!';
+$lang['lm_mb_bulk_update_success_alert_unstar']            	        = 'Desmarcado como favorável!';
+$lang['lm_mb_bulk_update_success_alert_bookmark']            	    = 'Marcado como favorito!';
+$lang['lm_mb_bulk_update_success_alert_unbookmark']            	    = 'Marcador removido!';
+$lang['lm_mb_bulk_update_success_alert_delete']            	        = 'Movido para a lixeira!';
+$lang['lm_mb_bulk_delete_success_alert_']            	            = 'Linha deletada!';
+$lang['lm_mb_send_btn']                                         	= 'Enviar';
+$lang['lm_mb_draft_btn']                                         	= 'Salvar Rascunho';
+$lang['lm_mb_bulk_update_danger_alert']                         	= 'Não atualizado!';
+$lang['lm_mb_mail_sent_success_alert']                          	= 'Email enviado!';
+$lang['lm_mb_mail_sent_danger_alert']            	                = 'Email não enviado!';
+$lang['lm_last_remark_th']                                      	= 'Última observação';
+$lang['lm_remark_th']                                           	= 'Observação';
+$lang['lm_follow_up_from_placeholder']                          	= 'Do acompanhamento';
+$lang['lm_follow_up_to_placeholder']            	                = 'Para acompanhar';
+$lang['lm_mb_smtp_config_heading']                                 	= 'Outgoing Emails(SMTP)';
+$lang['lm_mb_imap_config_heading']                                 	= 'Incoming Emails(IMAP)';
+$lang['lm_back_to_get']            	                                = 'Voltar à caixa de entrada';
+$lang['lm_back_to_sending']                                      	= 'Voltar para Enviado';
+$lang['lm_back_to_draft']            	                            = 'Voltar ao Rascunho';
+$lang['lm_back_to_trash']            	                            = 'Voltar à Lixeira';
+$lang['lm_twilio_number_space_error']                            	= 'Espaço não permitido no número de telefone twilio!';
+$lang['lm_twilio_number_numeric_error']                          	= 'Caracteres não permitidos no número de telefone twilio!';
+$lang['lm_alert_no_row_effected']            	                    = 'Nenhuma alteração precisa ser atualizada!';
+$lang['lm_mailbox_to']            	                                = 'Para';
