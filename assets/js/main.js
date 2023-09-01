@@ -1737,6 +1737,7 @@ $(function () {
     assigned: "[name='view_assigned']",
     status: "[name='view_status[]']",
     source: "[name='view_source']",
+    departments: "[name='view_departments[]']",
   };
 
   // Init the table

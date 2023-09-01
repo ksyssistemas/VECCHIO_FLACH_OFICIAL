@@ -1,6 +1,6 @@
 {
     "require": {
-        "php" : "^8.2.4",
+        "php" : "^8.0.29",
         "cocur/slugify": "^4.0",
         "neitanod/forceutf8": "~2.0",
         "tecnickcom/tcpdf": "^6.2",

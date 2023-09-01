@@ -3,7 +3,7 @@
 
 <?php hooks()->do_action('before_js_scripts_render'); ?>
 
-<?php echo app_compile_scripts();
+<?php echo app_compile_scripts(); 
 
 /**
  * Global function for custom field of type hyperlink

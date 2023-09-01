@@ -25,6 +25,7 @@ $aColumns = array_merge($aColumns, ['company',
     'firstname as assigned_firstname',
     db_prefix() . 'leads_status.name as status_name',
     db_prefix() . 'leads_sources.name as source_name',
+    '(SELECT name FROM '. db_prefix() . 'departments WHERE departmentid = ' . db_prefix() . 'staff_departments.departmentid ) as department_name',
     'lastcontact',
     'dateadded',
 ]);
@@ -36,6 +37,7 @@ $join = [
     'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
     'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
     'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
+    'LEFT JOIN ' . db_prefix() . 'staff_departments ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'staff_departments.staffid',
 ];
 
 foreach ($custom_fields as $key => $field) {
@@ -45,7 +47,7 @@ foreach ($custom_fields as $key => $field) {
     array_push($join, 'LEFT JOIN ' . db_prefix() . 'customfieldsvalues as ctable_' . $key . ' ON ' . db_prefix() . 'leads.id = ctable_' . $key . '.relid AND ctable_' . $key . '.fieldto="' . $field['fieldto'] . '" AND ctable_' . $key . '.fieldid=' . $field['id']);
 }
 
-$where  = [];
+$where  = [''];
 $filter = false;
 
 if ($this->ci->input->post('custom_view')) {
@@ -79,6 +81,12 @@ if ($this->ci->input->post('status')
     && count($this->ci->input->post('status')) > 0
     && ($filter != 'lost' && $filter != 'junk')) {
     array_push($where, 'AND status IN (' . implode(',', $this->ci->db->escape_str($this->ci->input->post('status'))) . ')');
+}
+
+if ($this->ci->input->post('departments')
+    && count($this->ci->input->post('departments')) > 0
+    && ($filter != 'lost' && $filter != 'junk')) {
+    array_push($where, 'AND '.db_prefix().'staff_departments.departmentid IN (' . implode(',', $this->ci->db->escape_str($this->ci->input->post('departments'))) . ')');
 }
 
 if ($this->ci->input->post('source')) {
@@ -217,6 +225,7 @@ foreach ($rResult as $aRow) {
 
     $row[] = '<span data-toggle="tooltip" data-title="' . _dt($aRow['dateadded']) . '" class="text-has-action is-date">' . time_ago($aRow['dateadded']) . '</span>';
 
+    $row[] = $aRow['department_name'];
     // Custom fields add values
     foreach ($customFieldsColumns as $customFieldColumn) {
         $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);

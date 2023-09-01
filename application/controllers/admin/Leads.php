@@ -46,7 +46,10 @@ class Leads extends AdminController
         $data['leadid']   = $id;
         $data['isKanBan'] = $this->session->has_userdata('leads_kanban_view') &&
             $this->session->userdata('leads_kanban_view') == 'true';
-
+        //Departamentos
+        $this->load->model('departments_model');
+        $data['departments'] = $this->departments_model->get();
+    
         $this->load->view('admin/leads/manage_leads', $data);
     }
 
