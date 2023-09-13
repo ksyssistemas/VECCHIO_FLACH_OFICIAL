@@ -26,8 +26,16 @@ class Proposals_model extends App_Model
 
     public function get_statuses()
     {
-        return $this->statuses;
+        $statuses2 = $this->db->get(db_prefix() . 'proposals_status')->result_array();
+        $statuses3 = [];
+        $i = 0;
+        foreach ($statuses2 as $status) {
+            $statuses3[$i]= $status['id'];
+            $i++;
+        }
+        return $statuses3;
     }
+
 
     public function get_sale_agents()
     {
@@ -38,6 +46,117 @@ class Proposals_model extends App_Model
     {
         return $this->db->query('SELECT DISTINCT(YEAR(date)) as year FROM ' . db_prefix() . 'proposals')->result_array();
     }
+
+    /**
+     * Get proposals statuses
+     * @param  mixed $id status id
+     * @return mixed      object if id passed else array
+     */
+    public function get_status($id = '', $where = [])
+    {
+        $this->db->where($where);
+        if (is_numeric($id)) {
+            $this->db->where('id', $id);
+
+
+            return $this->db->get(db_prefix() . 'proposals_status')->row();
+        }
+
+
+        $statuses2 = $this->app_object_cache->get('proposals-all-statuses');
+
+
+        if (!$statuses2) {
+            $this->db->order_by('statusorder', 'asc');
+
+
+            $statuses2 = $this->db->get(db_prefix() . 'proposals_status')->result_array();
+            $this->app_object_cache->add('proposals-all-statuses', $statuses2);
+        }
+
+
+        return $statuses2;
+    }
+
+
+     /**
+     * Add new proposal status
+     * @param array $data proposal status data
+     */
+    public function add_status($data)
+    {
+        if (isset($data['color']) && $data['color'] == '') {
+            $data['color'] = hooks()->apply_filters('default_proposal_status_color', '#757575');
+        }
+
+
+        if (!isset($data['statusorder'])) {
+            $data['statusorder'] = total_rows(db_prefix() . 'proposals_status') + 1;
+        }
+
+
+        $this->db->insert(db_prefix() . 'proposals_status', $data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            log_activity('New Proposals Status Added [StatusID: ' . $insert_id . ', Name: ' . $data['name'] . ']');
+
+
+            return $insert_id;
+        }
+
+
+        return false;
+    }
+
+
+    public function update_status($data, $id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'proposals_status', $data);
+        if ($this->db->affected_rows() > 0) {
+            log_activity('Proposals Status Updated [StatusID: ' . $id . ', Name: ' . $data['name'] . ']');
+
+
+            return true;
+        }
+
+
+        return false;
+    }
+
+
+    /**
+     * Delete proposal status from database
+     * @param  mixed $id status id
+     * @return boolean
+     */
+    public function delete_status($id)
+    {
+        $current = $this->get_status($id);
+        // Check if is already using in table
+        if (is_reference_in_table('status', db_prefix() . 'proposals', $id)) {
+            return [
+                'referenced' => true,
+            ];
+        }
+
+
+        $this->db->where('id', $id);
+        $this->db->delete(db_prefix() . 'proposals_status');
+        if ($this->db->affected_rows() > 0) {
+           /* if (get_option('proposals_default_status') == $id) {
+                update_option('proposals_default_status', '');
+            }*/
+            log_activity('Proposals Status Deleted [StatusID: ' . $id . ']');
+
+
+            return true;
+        }
+
+
+        return false;
+    }
+
 
     /**
      * Inserting new proposal function

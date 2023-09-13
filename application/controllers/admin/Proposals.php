@@ -190,7 +190,7 @@ class Proposals extends AdminController
         }
         $data['items_groups'] = $this->invoice_items_model->get_groups();
 
-        $data['statuses']      = $this->proposals_model->get_statuses();
+        $data['statuses']      = $this->proposals_model->get_status();
         $data['staff']         = $this->staff_model->get('', ['active' => 1]);
         $data['currencies']    = $this->currencies_model->get();
         $data['base_currency'] = $this->currencies_model->get_base_currency();
@@ -753,4 +753,69 @@ class Proposals extends AdminController
             }
         }
     }
+    // Statuses
+    /* View proposals statuses */
+    public function statuses()
+    {
+        if (!is_admin()) {
+            access_denied('Proposals Statuses');
+        }
+        $data['statuses'] = $this->proposals_model->get_status();
+        $data['title']    = 'Proposals statuses';
+        $this->load->view('admin/proposals/manage_statuses', $data);
+    }
+
+
+     /* Add or update proposals status */
+     public function status()
+     {
+         if (!is_admin() /*&& get_option('staff_members_create_inline_proposal_status') == '0'*/) {
+             access_denied('Proposals Statuses');
+         }
+         if ($this->input->post()) {
+             $data = $this->input->post();
+             if (!$this->input->post('id')) {
+                 $inline = isset($data['inline']);
+                 if (isset($data['inline'])) {
+                     unset($data['inline']);
+                 }
+                 $id = $this->proposals_model->add_status($data);
+                 if (!$inline) {
+                     if ($id) {
+                         set_alert('success', _l('added_successfully', _l('proposals_status')));
+                     }
+                 } else {
+                     echo json_encode(['success' => $id ? true : false, 'id' => $id]);
+                 }
+             } else {
+                 $id = $data['id'];
+                 unset($data['id']);
+                 $success = $this->proposals_model->update_status($data, $id);
+                 if ($success) {
+                     set_alert('success', _l('updated_successfully', _l('proposals_status')));
+                 }
+             }
+         }
+     }
+ 
+     /* Delete proposals status from databae */
+     public function delete_status($id)
+     {
+         if (!is_admin()) {
+             access_denied('Proposals Statuses');
+         }
+         if (!$id) {
+             redirect(admin_url('proposals/statuses'));
+         }
+         $response = $this->proposals_model->delete_status($id);
+         if (is_array($response) && isset($response['referenced'])) {
+             set_alert('warning', _l('is_referenced', _l('proposals_status_lowercase')));
+         } elseif ($response == true) {
+             set_alert('success', _l('deleted', _l('proposals_status')));
+         } else {
+             set_alert('warning', _l('problem_deleting', _l('proposals_status_lowercase')));
+         }
+         redirect(admin_url('proposals/statuses'));
+     }
+
 }

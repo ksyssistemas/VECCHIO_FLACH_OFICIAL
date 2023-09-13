@@ -443,6 +443,22 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
 
+        $CI->app_menu->add_setup_menu_item('proposals', [
+            'collapse' => true,
+            'name'     => _l('acs_proposals'),
+            'position' => 26,
+            'badge'    => [],
+        ]);
+
+
+        $CI->app_menu->add_setup_children_item('proposals', [
+            'slug'     => 'proposals-statuses',
+            'name'     => _l('acs_proposals_statuses_submenu'),
+            'href'     => admin_url('proposals/statuses'),
+            'position' => 5,
+            'badge'    => [],
+        ]);
+
         $CI->app_menu->add_setup_menu_item('finance', [
             'collapse' => true,
             'name'     => _l('acs_finance'),

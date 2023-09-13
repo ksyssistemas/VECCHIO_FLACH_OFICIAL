@@ -196,27 +196,15 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-group select-placeholder">
-                                            <label for="status"
-                                                class="control-label"><?php echo _l('proposal_status'); ?></label>
-                                            <?php
-                                    $disabled = '';
-                                    if (isset($proposal)) {
-                                        if ($proposal->estimate_id != null || $proposal->invoice_id != null) {
-                                            $disabled = 'disabled';
+                                    <?php
+                                        $selected = '';
+                                        if (isset($proposal)) {
+                                            $selected = $proposal->status;
+                                        } elseif (isset($status_id)) {
+                                            $selected = $status_id;
                                         }
-                                    }
-                                    ?>
-                                            <select name="status" class="selectpicker" data-width="100%"
-                                                <?php echo $disabled; ?>
-                                                data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-                                                <?php foreach ($statuses as $status) { ?>
-                                                <option value="<?php echo $status; ?>" <?php if ((isset($proposal) && $proposal->status == $status) || (!isset($proposal) && $status == 0)) {
-                                        echo 'selected';
-                                    } ?>><?php echo format_proposal_status($status, '', false); ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
+                                        echo render_proposals_status_select($statuses, $selected, 'proposals_add_edit_status');
+                                         ?>
                                     </div>
                                     <div class="col-md-6">
                                         <?php

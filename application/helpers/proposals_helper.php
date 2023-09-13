@@ -114,6 +114,23 @@ function proposal_status_color_class($id, $replace_default_by_muted = false)
  */
 function format_proposal_status($status, $classes = '', $label = true)
 {
+    $CI = &get_instance();
+    $statuses = $CI->db->get(db_prefix() . 'proposals_status')->result_array();
+
+
+    foreach ($statuses as $statu) {
+        if($status == $statu['id']){
+            if ($label == true) {
+                return '<span class="'. ' label' . (empty($statu['color']) ? ' label-default': '') . '" style="color:' . $statu['color'] . ';border:1px solid ' . adjust_hex_brightness($statu['color'], 0.4) . ';background: ' . adjust_hex_brightness($statu['color'], 0.04) . ';">' . $statu['name'].'</span>';
+            }
+            return $statu['name'];
+        }  
+       
+    }
+
+
+    //daqui pra baixo era quando era estatico
+
     $id = $status;
     if ($status == 1) {
         $status      = _l('proposal_status_open');
@@ -141,6 +158,24 @@ function format_proposal_status($status, $classes = '', $label = true)
 
     return $status;
 }
+
+/**
+ * Render proposals status select field with ability to create inline statuses with + sign
+ * @param  array  $statuses         current statuses
+ * @param  string  $selected        selected status
+ * @param  string  $lang_key        the label of the select
+ * @param  string  $name            the name of the select
+ * @param  array   $select_attrs    additional select attributes
+ * @param  boolean $exclude_default whether to exclude default Client status
+ * @return string
+ */
+function render_proposals_status_select($statuses, $selected = '', $lang_key = '', $name = 'status', $select_attrs = [], $exclude_default = false)
+{
+
+
+    return render_select($name, $statuses, ['id', 'name'], $lang_key, $selected, $select_attrs);
+}
+
 
 /**
  * Function that format proposal number based on the prefix option and the proposal id
