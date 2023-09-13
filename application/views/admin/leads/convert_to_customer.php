@@ -28,6 +28,7 @@
                 <?php echo form_hidden('default_language', $lead->default_language); ?>
                 <?php echo render_input('firstname', 'lead_convert_to_client_firstname', $firstname); ?>
                 <?php echo render_input('lastname', 'lead_convert_to_client_lastname', $lastname); ?>
+                <?php echo render_input('vat', 'client_vat_number', $lead->vat); ?>
                 <?php echo render_input('title', 'contact_position', $lead->title); ?>
                 <?php echo render_input('email', 'lead_convert_to_email', $lead->email); ?>
                 <?php echo render_input('company', 'lead_company', $lead->company); ?>

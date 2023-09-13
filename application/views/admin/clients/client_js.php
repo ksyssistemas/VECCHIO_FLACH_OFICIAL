@@ -181,6 +181,7 @@ $(function() {
     if (app.options.company_is_required == 1) {
         vRules = {
             company: 'required',
+            vat: 'required',
         }
     }
 

@@ -4826,6 +4826,8 @@ function init_lead(id, isEdit) {
 function validate_lead_form() {
   var validationObject = {
     name: "required",
+    email: "required",
+    phonenumber: "required",
     source: "required",
     status: {
       required: {
@@ -4846,7 +4848,12 @@ function validate_lead_form() {
 
     if (field == "email") {
       validationObject[field].email = true;
+      validationObject[field].required = true;
     }
+    if (field == "phonenumber") {
+      validationObject[field].required = true;
+    }
+
 
     validationObject[field].remote = {
       url: admin_url + "leads/validate_unique_field",
@@ -4866,6 +4873,8 @@ function validate_lead_form() {
     }
   });
 
+  console.log(validationObject);
+
   appValidateForm(
     $("#lead_form"),
     validationObject,
@@ -4879,6 +4888,8 @@ function validate_lead_convert_to_client_form() {
   var rules_convert_lead = {
     firstname: "required",
     lastname: "required",
+    vat: "required",
+    phonenumber: "required",
     password: {
       required: {
         depends: function (element) {

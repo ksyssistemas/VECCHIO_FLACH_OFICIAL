@@ -156,6 +156,10 @@
                         <?php echo _l('lead_add_edit_name'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-name">
                         <?php echo(isset($lead) && $lead->name != '' ? $lead->name : '-') ?></dd>
+                        <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                        <?php echo _l('client_vat_number'); ?></dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
+                        <?php echo(isset($lead) && $lead->vat != '' ? $lead->vat : '-') ?></dd>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_title'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -372,6 +376,10 @@
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->name : ''); ?>
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
+                <?php $value = (isset($lead) ? $lead->vat : ''); ?>
+                <?php echo render_input('vat', 'client_vat_number', $value); ?>
+                <?php $value = (isset($lead) ? $lead->company : ''); ?>
+                <?php echo render_input('company', 'lead_company', $value); ?>
                 <?php $value = (isset($lead) ? $lead->title : ''); ?>
                 <?php echo render_input('title', 'lead_title', $value); ?>
                 <?php $value = (isset($lead) ? $lead->email : ''); ?>
