@@ -15,6 +15,7 @@ class Leads extends AdminController
     {
         parent::__construct();
         $this->load->model('leads_model');
+        $this->load->helper('bemtevi_api');
     }
 
     /* List all leads */
@@ -604,6 +605,23 @@ class Leads extends AdminController
 
                 log_activity('Created Lead Client Profile [LeadID: ' . $data['leadid'] . ', ClientID: ' . $id . ']');
                 hooks()->do_action('lead_converted_to_customer', ['lead_id' => $data['leadid'], 'customer_id' => $id]);
+                 //exportar o lead que virou cliente para a base do bemtevi como um cliente
+                 if ($integracao_btv = integracao_btv()) {
+                    // Crie um array associativo com os campos que deseja passar para adicionar_cliente_btv
+                    $dados = [
+                        "nome" => $data['company'],
+                        "cpfcnpj" => $data['vat'],
+                        "pessoafisica" => "0",
+                        "inscricaoestadual" => "",
+                        "razaosocial" => "",
+                        "rg" => ""
+                    ];
+
+
+                    // Adicione o cliente usando os dados acumulados
+                    $add_client = adicionar_cliente_btv($dados);
+                }
+
                 redirect(admin_url('clients/client/' . $id));
             }
         }

@@ -1,0 +1,28 @@
+{
+    "url-prod": "https://api-pys.ksys.net.br/main",
+    "url-teste": "https://api-pys.ksys.net.br/main",
+    "url": "https://api-pys.ksys.net.br/main",
+    "url_hd":"https://api-pys-hd.ksys.net.br/main",
+    "url_crm":"",
+    "baseDados": {
+        "ip": "143.0.120.148",
+        "user": "leomar",
+        "password": "12345678",
+        "db": "bemtevi_leomar",
+        "port": 3306
+    },
+    "baseDados_hd": {
+        "ip": "",
+        "user": "",
+        "password": "",
+        "db": "",
+        "port":""
+    },
+    "baseDados_crm": {
+        "ip": "",
+        "user": "",
+        "password": "",
+        "db": "",
+        "port":""
+    }
+}
