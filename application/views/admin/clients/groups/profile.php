@@ -183,7 +183,7 @@
                         <?php $value = (isset($client) ? $client->state : ''); ?>
                         <?php echo render_input('state', 'client_state', $value); ?>
                         <?php $value = (isset($client) ? $client->zip : ''); ?>
-                        <?php echo render_input('zip', 'client_postal_code', $value); ?>
+                        <?php echo render_input('zip', 'client_postal_code', $value, input_attrs: ["onChange"=>"completeByCep()"]); ?>
                         <?php $countries       = get_all_countries();
                      $customer_default_country = get_option('customer_default_country');
                      $selected                 = (isset($client) ? $client->country : $customer_default_country);

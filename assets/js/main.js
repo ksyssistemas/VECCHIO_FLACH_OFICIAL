@@ -9263,6 +9263,31 @@ function add_batch_payment() {
   );
 }
 
+//função para preencher os campos pelo CEP
+function completeByCep(){
+  var cep = $("#zip").val();
+  var viacep = requestCEP(cep);
+  console.log(viacep);
+  $("#state").val(viacep.uf);
+  $("#city").val(viacep.localidade);
+  $("#address").val(viacep.logradouro);
+}
+
+
+function requestCEP(cep){
+  var resposta=$.ajax({
+    async:false,
+    url:"https://viacep.com.br/ws/"+cep+"/json/",
+    type:'get',
+    data:{'GetConfig':'YES'},
+    dataType:"JSON"
+    }).responseJSON;
+
+
+  return resposta;
+}
+
+
 /**
  * @DEPRECATED FUNCTIONS
  */

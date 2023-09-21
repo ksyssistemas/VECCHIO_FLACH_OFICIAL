@@ -421,6 +421,8 @@
                 <?php echo render_input('company', 'lead_company', $value); ?>
             </div>
             <div class="col-md-6">
+            <?php $value = (isset($lead) ? $lead->zip : ''); ?>
+                <?php echo render_input('zip', 'lead_zip', $value, input_attrs: ["onChange"=>"completeByCep()"]); ?>
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
                 <?php $value = (isset($lead) ? $lead->city : ''); ?>
@@ -433,8 +435,7 @@
                $selected                 = (isset($lead) ? $lead->country : $customer_default_country);
                echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'lead_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
-                <?php $value = (isset($lead) ? $lead->zip : ''); ?>
-                <?php echo render_input('zip', 'lead_zip', $value); ?>
+              
                 <?php if (!is_language_disabled()) { ?>
                 <div class="form-group">
                     <label for="default_language"
