@@ -620,6 +620,11 @@ class Leads extends AdminController
 
                     // Adicione o cliente usando os dados acumulados
                     $add_client = adicionar_cliente_btv($dados);
+                    
+                     //vinculuar o cliente com o id retornado do bemtevi
+                     $this->db->where('userid', $id);
+                     $this->db->update(db_prefix() . 'clients', ['codbtv' => $add_client['cliente']]);
+ 
                 }
 
                 redirect(admin_url('clients/client/' . $id));
