@@ -1279,6 +1279,28 @@ class Leads extends AdminController
         }
     }
 
+    public function validate_unique_field_and_client_vat(){
+        if ($this->input->post()) {
+
+
+            $lead_id = $this->input->post('lead_id');
+            $field   = $this->input->post('field');
+            $value   = $this->input->post($field);
+
+
+            $lead = total_rows(db_prefix() . 'leads', [ $field => $value ]);
+            $client = total_rows(db_prefix() . 'clients', [ $field => $value ]);
+
+
+            if($lead > 0 || $client > 0){
+                echo 'false';
+            }else{
+                echo 'true';
+            }
+        }
+    }
+
+
     public function bulk_action()
     {
         if (!is_staff_member()) {

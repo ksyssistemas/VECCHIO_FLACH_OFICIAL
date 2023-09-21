@@ -370,6 +370,7 @@ function render_admin_js_variables()
         'phonenumber_exists'                                      => _l('phonenumber_exists'),
         'website_exists'                                          => _l('website_exists'),
         'company_exists'                                          => _l('company_exists'),
+        'vat_exists'                                              => _l('vat_exists'),
         'filter_by'                                               => _l('filter_by'),
         'you_can_not_upload_any_more_files'                       => _l('you_can_not_upload_any_more_files'),
         'cancel_upload'                                           => _l('cancel_upload'),

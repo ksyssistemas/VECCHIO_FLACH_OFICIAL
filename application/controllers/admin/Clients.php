@@ -1082,4 +1082,30 @@ class Clients extends AdminController
 
         echo json_encode($viewData);
     }
+    public function validate_unique_field()
+    {
+        if ($this->input->post()) {
+
+
+            // First we need to check if the field is the same
+            $client_id = $this->input->post('client_id');
+            $field   = $this->input->post('field');
+            $value   = $this->input->post($field);
+
+
+            if ($client_id != '') {
+                $this->db->select($field);
+                $this->db->where('id', $client_id);
+                $row = $this->db->get(db_prefix() . 'clients')->row();
+                if ($row->{$field} == $value) {
+                    echo json_encode(true);
+                    die();
+                }
+            }
+
+
+            echo total_rows(db_prefix() . 'clients', [ $field => $value ]) > 0 ? 'false' : 'true';
+        }
+    }
+
 }

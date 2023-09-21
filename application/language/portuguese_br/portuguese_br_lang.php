@@ -3634,6 +3634,7 @@ $lang['lead_unique_validation_on']                 = 'Execute a validação para
 $lang['phonenumber_exists']                        = 'O número de telefone já existe';
 $lang['company_exists']                            = 'Empresa já existe';
 $lang['website_exists']                            = 'Website já existe';
+$lang['vat_exists']                                = 'CPF/CNPJ já existe';
 $lang['send_payment_receipt_to_client']            = 'Enviar recibo de pagamento ao cliente';
 $lang['payment_sent_successfully']                 = 'Recibo de pagamento enviado com sucesso.';
 $lang['payment_sent_failed']                       = 'Não foi possível enviar o comprovante de pagamento.';

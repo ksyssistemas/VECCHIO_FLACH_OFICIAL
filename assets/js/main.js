@@ -4866,6 +4866,18 @@ function validate_lead_form() {
       },
     };
 
+    //validar se existe cliente com cpf/cnpj cadastrado
+    if(field == "vat"){
+      validationObject[field].remote = {
+        url: admin_url + "leads/validate_unique_field_and_client_vat",
+        type: "post",
+        data: {
+          field: field,
+        },
+      };
+    }
+
+
     if (typeof app.lang[field + "_exists"] != "undefined") {
       messages[field] = {
         remote: app.lang[field + "_exists"],
@@ -4918,7 +4930,37 @@ function validate_lead_convert_to_client_form() {
   if (app.options.company_is_required == 1) {
     rules_convert_lead.company = "required";
   }
-  appValidateForm($("#lead_to_client_form"), rules_convert_lead);
+  var messages = {};
+  var leadToClientUniqueValidationFields = ["vat"];
+  $.each(leadToClientUniqueValidationFields, function (key, field) {
+    rules_convert_lead[field] = {};
+
+
+    if (field == "vat") {
+      rules_convert_lead[field].required = true;
+    }
+
+
+    rules_convert_lead[field].remote = {
+      url: admin_url + "clients/validate_unique_field",
+      type: "post",
+      data: {
+        field: field,
+      },
+    };
+
+
+    if (typeof app.lang[field + "_exists"] != "undefined") {
+      messages[field] = {
+        remote: app.lang[field + "_exists"],
+      };
+    }
+  });
+
+
+  console.log(rules_convert_lead);
+  appValidateForm($("#lead_to_client_form"), rules_convert_lead, "", messages);
+
 }
 
 // Lead profile data function form handler

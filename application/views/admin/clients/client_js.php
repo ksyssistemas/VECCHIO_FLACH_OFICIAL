@@ -185,7 +185,34 @@ $(function() {
         }
     }
 
-    appValidateForm($('.client-form'), vRules);
+    var messages = {};
+    var clientUniqueValidationFields = ["vat"];
+    $.each(clientUniqueValidationFields, function (key, field) {
+        vRules[field] = {};
+
+
+    if (field == "vat") {
+        vRules[field].required = true;
+    }
+
+
+    vRules[field].remote = {
+      url: admin_url + "clients/validate_unique_field",
+      type: "post",
+      data: {
+        field: field,
+      },
+    };
+
+
+    if (typeof app.lang[field + "_exists"] != "undefined") {
+      messages[field] = {
+        remote: app.lang[field + "_exists"],
+      };
+    }
+  });
+
+  appValidateForm($('.client-form'), vRules, "", messages);
 
     if (typeof(customer_id) == 'undefined') {
         $('#company').on('blur', function() {
