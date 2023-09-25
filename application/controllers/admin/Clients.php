@@ -4,6 +4,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Clients extends AdminController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper('bemtevi_api');
+    }
+
     /* List all clients */
     public function index()
     {
@@ -112,8 +119,20 @@ class Clients extends AdminController
                         access_denied('customers');
                     }
                 }
-                $success = $this->clients_model->update($this->input->post(), $id);
+                $data = $this->input->post();
+                $success = $this->clients_model->update($data, $id);
                 if ($success == true) {
+                    //instanciar o cliente
+                    $client = $this->clients_model->get($id);
+                    if($client->codbtv != null){
+                        //passar dados para adicionar o celular no BTV
+                    $dados['celular'] = [
+                        "cod_cliente"=> $client->codbtv,
+                        "numero"=> $data['phonenumber']
+                    ];
+                    //adicionar o celular com os dados
+                    $add_celular = adicionar_celular_btv($dados['celular']);
+                    }
                     set_alert('success', _l('updated_successfully', _l('client')));
                 }
                 redirect(admin_url('clients/client/' . $id));

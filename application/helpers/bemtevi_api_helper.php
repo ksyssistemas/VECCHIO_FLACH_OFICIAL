@@ -79,3 +79,33 @@ function adicionar_cliente_btv($data){
     } 
     return false;
 }
+
+function adicionar_celular_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+    if(file_exists($file)){
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Cliente.adicionar_celular",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "cod_cliente"=>$data["cod_cliente"],
+                "numero"=>$data["numero"]
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    }
+    return false;
+}

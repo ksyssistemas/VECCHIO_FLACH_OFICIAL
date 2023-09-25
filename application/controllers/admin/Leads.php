@@ -624,6 +624,17 @@ class Leads extends AdminController
                      //vinculuar o cliente com o id retornado do bemtevi
                      $this->db->where('userid', $id);
                      $this->db->update(db_prefix() . 'clients', ['codbtv' => $add_client['cliente']]);
+
+                     //passar dados para adicionar o celular no BTV
+                    $dados['celular'] = [
+                        "cod_cliente"=> $add_client['cliente'],
+                        "numero"=> $data['phonenumber']
+                    ];
+
+
+                    //adicionar o celular com os dados
+                    $add_celular = adicionar_celular_btv($dados['celular']);
+
  
                 }
 
