@@ -1095,7 +1095,7 @@ class Clients extends AdminController
 
             if ($client_id != '') {
                 $this->db->select($field);
-                $this->db->where('id', $client_id);
+                $this->db->where('userid', $client_id);
                 $row = $this->db->get(db_prefix() . 'clients')->row();
                 if ($row->{$field} == $value) {
                     echo json_encode(true);

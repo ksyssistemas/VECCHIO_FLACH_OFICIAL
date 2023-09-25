@@ -201,6 +201,9 @@ $(function() {
       type: "post",
       data: {
         field: field,
+        client_id: function () {
+          return $("html").find('input[name="userid"]').val();
+        },
       },
     };
 
