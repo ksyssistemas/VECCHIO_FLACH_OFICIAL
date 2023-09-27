@@ -25,10 +25,17 @@ $aColumns = array_merge($aColumns, ['company',
     'firstname as assigned_firstname',
     db_prefix() . 'leads_status.name as status_name',
     db_prefix() . 'leads_sources.name as source_name',
-    '(SELECT name FROM '. db_prefix() . 'departments WHERE departmentid = ' . db_prefix() . 'staff_departments.departmentid ) as department_name',
     'lastcontact',
     'dateadded',
+    '(SELECT GROUP_CONCAT(name)
+    FROM '. db_prefix() .'departments
+    WHERE departmentid IN (
+        SELECT departmentid
+        FROM '. db_prefix() .'staff_departments
+        WHERE staffid = tblstaff.staffid
+    )) as department_name',
 ]);
+
 
 $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'leads';
@@ -37,8 +44,8 @@ $join = [
     'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
     'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
     'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
-    'LEFT JOIN ' . db_prefix() . 'staff_departments ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'staff_departments.staffid',
 ];
+
 
 foreach ($custom_fields as $key => $field) {
     $selectAs = (is_cf_date($field) ? 'date_picker_cvalue_' . $key : 'cvalue_' . $key);
