@@ -44,7 +44,9 @@ $join = [
     'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
     'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
     'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
+    'LEFT JOIN ' . db_prefix() . 'staff_departments ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'staff_departments.staffid',
 ];
+
 
 
 foreach ($custom_fields as $key => $field) {
@@ -123,7 +125,8 @@ $additionalColumns = hooks()->apply_filters('leads_table_additional_columns_sql'
     'zip',
 ]);
 
-$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns);
+$groupBy = "GROUP BY ".db_prefix() ."leads.id";
+$result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns, $groupBy);
 
 $output  = $result['output'];
 $rResult = $result['rResult'];
