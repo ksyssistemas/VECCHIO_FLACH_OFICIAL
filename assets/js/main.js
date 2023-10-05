@@ -9333,6 +9333,18 @@ function requestCEP(cep){
   return resposta;
 }
 
+//função para esconder nome fantasia da empresa quando for cpf
+function showOrNotFantasyName(){
+  var quantidadeCaractere = $("#vat").val().replace(/[^0-9]/g,'').length;
+  console.log(quantidadeCaractere);
+  if(quantidadeCaractere == 14){
+    $("#fantasy_name").parent().removeClass('hide');
+  }else{
+    $("#fantasy_name").parent().addClass('hide');
+  }
+}
+
+
 
 /**
  * @DEPRECATED FUNCTIONS

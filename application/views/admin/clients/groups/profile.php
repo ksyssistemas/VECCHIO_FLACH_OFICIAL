@@ -86,9 +86,12 @@
                         <?php echo render_input('company', 'client_company', $value, 'text', $attrs); ?>
                         <div id="company_exists_info" class="hide"></div>
                         <?php hooks()->do_action('after_customer_profile_company_field', $client ?? null); ?>
+                        <?php $value = (isset($client) ? $client->fantasy_name : ''); $form_group_class = ($client->is_cnpj ? '' : 'hide')?>
+                        <?php echo render_input('fantasy_name', 'fantasy_name', $value, form_group_class: $form_group_class); ?>
                         <?php if (get_option('company_requires_vat_number_field') == 1) {
                       $value = (isset($client) ? $client->vat : '');
-                      echo render_input('vat', 'client_vat_number', $value);
+                      echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()"]);
+
                   } ?>
                         <?php hooks()->do_action('before_customer_profile_phone_field', $client ?? null); ?>
                         <?php $value = (isset($client) ? $client->phonenumber : ''); ?>

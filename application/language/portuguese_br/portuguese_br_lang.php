@@ -2303,6 +2303,7 @@ $lang['tasks_reminder_notification_before_help']               = 'Notificar os d
 # Version 1.1.0
 $lang['project_invoice_select_all_tasks'] = 'Selecionar todas as tarefas';
 $lang['lead_company']                     = 'Empresa';
+$lang['fantasy_name']                     = 'Nome Fantasia';
 
 # Version 1.1.1
 $lang['admin_auth_forgot_password_button']       = 'Confirmar';

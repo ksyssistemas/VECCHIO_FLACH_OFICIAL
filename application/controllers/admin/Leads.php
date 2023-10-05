@@ -613,7 +613,7 @@ class Leads extends AdminController
                         "cpfcnpj" => $data['vat'],
                         "pessoafisica" => "0",
                         "inscricaoestadual" => "",
-                        "razaosocial" => "",
+                        "razaosocial" => $data['fantasy_name'],
                         "rg" => ""
                     ];
 

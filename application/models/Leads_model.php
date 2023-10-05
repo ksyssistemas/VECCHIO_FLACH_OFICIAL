@@ -36,6 +36,16 @@ class Leads_model extends App_Model
                 $lead->public_url  = leads_public_url($id);
             }
 
+             //deixar cnpj/cpf apenas com numeros
+             $lead->vat = preg_replace('/[^0-9]/', '', $lead->vat);
+             //verificar se é CNPJ ou não
+             if(strlen($lead->vat) == 14){
+                 $lead->is_cnpj = true;
+             }else{
+                 $lead->is_cnpj = false;
+             }
+ 
+
             return $lead;
         }
 

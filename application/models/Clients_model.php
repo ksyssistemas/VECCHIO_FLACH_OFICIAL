@@ -42,6 +42,17 @@ class Clients_model extends App_Model
                 $client->vat = null;
             }
 
+            
+            //deixar cnpj/cpf apenas com numeros
+            $client->vat = preg_replace('/[^0-9]/', '', $client->vat);
+            //verificar se é CNPJ ou não
+            if(strlen($client->vat) == 14){
+                $client->is_cnpj = true;
+            }else{
+                $client->is_cnpj = false;
+            }
+
+
             $GLOBALS['client'] = $client;
 
             return $client;

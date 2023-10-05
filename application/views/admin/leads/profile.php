@@ -189,6 +189,12 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->company != '' ? $lead->company : '-') ?></dd>
+                        <?php if($lead->is_cnpj){ ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('fantasy_name'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->fantasy_name != '' ? $lead->fantasy_name : '-') ?></dd>
+                    <?php } ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_address'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -377,9 +383,11 @@
                 <?php $value = (isset($lead) ? $lead->name : ''); ?>
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
                 <?php $value = (isset($lead) ? $lead->vat : ''); ?>
-                <?php echo render_input('vat', 'client_vat_number', $value); ?>
+                <?php echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()"]); ?>
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
                 <?php echo render_input('company', 'lead_company', $value); ?>
+                <?php $value = (isset($lead) ? $lead->fantasy_name : ''); $form_group_class = ($lead->is_cnpj ? '' : 'hide')?>
+                <?php echo render_input('fantasy_name', 'fantasy_name', $value, form_group_class: $form_group_class); ?>
                 <?php $value = (isset($lead) ? $lead->title : ''); ?>
                 <?php echo render_input('title', 'lead_title', $value); ?>
                 <?php $value = (isset($lead) ? $lead->email : ''); ?>

@@ -28,10 +28,12 @@
                 <?php echo form_hidden('default_language', $lead->default_language); ?>
                 <?php echo render_input('firstname', 'lead_convert_to_client_firstname', $firstname); ?>
                 <?php echo render_input('lastname', 'lead_convert_to_client_lastname', $lastname); ?>
-                <?php echo render_input('vat', 'client_vat_number', $lead->vat); ?>
+                <?php echo render_input('vat', 'client_vat_number', $lead->vat, input_attrs: ["onChange"=>"showOrNotFantasyName()"]); ?>
                 <?php echo render_input('title', 'contact_position', $lead->title); ?>
                 <?php echo render_input('email', 'lead_convert_to_email', $lead->email); ?>
                 <?php echo render_input('company', 'lead_company', $lead->company); ?>
+                <?php $form_group_class = ($lead->is_cnpj ? '' : 'hide')?>
+                <?php echo render_input('fantasy_name', 'fantasy_name', $lead->fantasy_name, form_group_class: $form_group_class); ?>
                 <?php echo render_input('phonenumber', 'lead_convert_to_client_phone', $lead->phonenumber); ?>
                 <?php echo render_input('website', 'client_website', $lead->website); ?>
                 <?php echo render_textarea('address', 'client_address', $lead->address); ?>
