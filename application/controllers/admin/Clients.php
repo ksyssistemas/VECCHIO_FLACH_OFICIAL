@@ -1104,12 +1104,15 @@ class Clients extends AdminController
     public function validate_unique_field()
     {
         if ($this->input->post()) {
-
-
             // First we need to check if the field is the same
             $client_id = $this->input->post('client_id');
             $field   = $this->input->post('field');
             $value   = $this->input->post($field);
+
+
+            if($field == "vat"){
+                $value = preg_replace('/[^0-9]/', '', $value);
+            }
 
 
             if ($client_id != '') {
@@ -1126,5 +1129,6 @@ class Clients extends AdminController
             echo total_rows(db_prefix() . 'clients', [ $field => $value ]) > 0 ? 'false' : 'true';
         }
     }
+
 
 }

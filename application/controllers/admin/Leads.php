@@ -1276,10 +1276,17 @@ class Leads extends AdminController
     {
         if ($this->input->post()) {
 
+
             // First we need to check if the field is the same
             $lead_id = $this->input->post('lead_id');
             $field   = $this->input->post('field');
             $value   = $this->input->post($field);
+
+
+            if($field == "vat"){
+                $value = preg_replace('/[^0-9]/', '', $value);
+            }
+
 
             if ($lead_id != '') {
                 $this->db->select($field);
@@ -1291,9 +1298,11 @@ class Leads extends AdminController
                 }
             }
 
+
             echo total_rows(db_prefix() . 'leads', [ $field => $value ]) > 0 ? 'false' : 'true';
         }
     }
+
 
     public function validate_unique_field_and_client_vat(){
         if ($this->input->post()) {
@@ -1304,7 +1313,20 @@ class Leads extends AdminController
             $value   = $this->input->post($field);
 
 
+            if($field == "vat"){
+                $value = preg_replace('/[^0-9]/', '', $value);
+            }
+
+
             $lead = total_rows(db_prefix() . 'leads', [ $field => $value ]);
+            if ($lead_id != '') {
+                $this->db->select($field);
+                $this->db->where('id', $lead_id);
+                $row = $this->db->get(db_prefix() . 'leads')->row();
+                if ($row->{$field} == $value) {
+                    $lead = 0;
+                }
+            }
             $client = total_rows(db_prefix() . 'clients', [ $field => $value ]);
 
 
@@ -1315,6 +1337,7 @@ class Leads extends AdminController
             }
         }
     }
+
 
 
     public function bulk_action()

@@ -116,6 +116,8 @@ class Clients_model extends App_Model
      */
     public function add($data, $withContact = false)
     {
+        //deixar o vat(cpf/cnpj) somente com numeros
+        $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
         $contact_data = [];
         // From Lead Convert to client
         if (isset($data['send_set_password_email'])) {
@@ -229,6 +231,8 @@ class Clients_model extends App_Model
      */
     public function update($data, $id, $client_request = false)
     {
+        //deixar o vat(cpf/cnpj) somente com numeros
+        $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
         $updated = false;
         $data    = $this->check_zero_columns($data);
 

@@ -4873,9 +4873,13 @@ function validate_lead_form() {
         type: "post",
         data: {
           field: field,
+          lead_id: function () {
+            return $("#lead-modal").find('input[name="leadid"]').val();
+          },
         },
       };
     }
+
 
 
     if (typeof app.lang[field + "_exists"] != "undefined") {
