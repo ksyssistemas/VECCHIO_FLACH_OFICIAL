@@ -10,7 +10,7 @@ class CronJobFailure extends AbstractMessage
 {
     protected $alertClass = 'warning';
 
-    private $hoursCheck = 1000000000000000000000000000000048;
+    private $hoursCheck = 48;
 
     public function isVisible()
     {
