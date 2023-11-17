@@ -607,6 +607,10 @@ class Leads extends AdminController
                 hooks()->do_action('lead_converted_to_customer', ['lead_id' => $data['leadid'], 'customer_id' => $id]);
                  //exportar o lead que virou cliente para a base do bemtevi como um cliente
                  if ($integracao_btv = integracao_btv()) {
+                     //buscar dados do consultor responsavel
+                     $lead = $this->leads_model->get($data['leadid']);
+                     $this->db->where('staffid', $lead->assigned);
+                     $staff = $this->db->get(db_prefix() . 'staff')->row_array(); 
                     // Crie um array associativo com os campos que deseja passar para adicionar_cliente_btv
                     $dados = [
                         "nome" => $data['company'],
@@ -614,7 +618,8 @@ class Leads extends AdminController
                         "pessoafisica" => "0",
                         "inscricaoestadual" => "",
                         "razaosocial" => $data['fantasy_name'],
-                        "rg" => ""
+                        "rg" => "",
+                        "consultor_responsavel" => $staff['idBTV']
                     ];
 
 
@@ -632,8 +637,31 @@ class Leads extends AdminController
                     ];
 
 
-                    //adicionar o celular com os dados
-                    $add_celular = adicionar_celular_btv($dados['celular']);
+                      //adicionar o celular com os dados
+                      $add_celular = adicionar_celular_btv($dados['celular']);
+                        //passar dados para adicionar o email no BTV
+                    $dados['email'] = [
+                        "cod_cliente"=> $add_client['cliente'],
+                        "email"=> $data['email']
+                    ];
+                    //adicionar o email com os dados
+                    $add_email = adicionar_email_btv($dados['email']);
+                      //passar os dados do estado
+                      $dados['endereco']['estado'] = $data['state'];
+                      //buscar codigo do estado no bemtevi e colocar na variavel
+                      $dados['endereco']['cod_estado'] = retornar_codigo_estado_btv($dados['endereco']);
+                      //passar os dados da cidade
+                      $dados['endereco']['cidade'] = $data['city'];
+                      //buscar codigo da cidade no bemtevi e colocar na variavel
+                      $dados['endereco']['cod_cidade'] = retornar_codigo_cidade_btv($dados['endereco']);
+                      //passar todos os dados de endereço restantes
+                      $dados['endereco']['cod_cliente'] = $add_client['cliente'];
+                      $dados['endereco']['bairro'] = $data['district'];
+                      $dados['endereco']['rua'] = $data['address'];
+                      $dados['endereco']['cep'] = $data['zip'];
+                      //adicionar o endereço no bemtevi
+                      $add_endereco = adicionar_endereco_btv($dados['endereco']);
+  
 
  
                 }

@@ -4905,6 +4905,12 @@ function validate_lead_convert_to_client_form() {
     firstname: "required",
     lastname: "required",
     vat: "required",
+    country: 'required',
+    city: 'required',
+    zip: 'required',
+    address: 'required',
+    district: 'required',
+    state: 'required',
     phonenumber: "required",
     password: {
       required: {
@@ -9317,6 +9323,7 @@ function completeByCep(){
   $("#state").val(viacep.uf);
   $("#city").val(viacep.localidade);
   $("#address").val(viacep.logradouro);
+  $("#district").val(viacep.bairro);
 }
 
 

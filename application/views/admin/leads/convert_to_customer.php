@@ -36,7 +36,9 @@
                 <?php echo render_input('fantasy_name', 'fantasy_name', $lead->fantasy_name, form_group_class: $form_group_class); ?>
                 <?php echo render_input('phonenumber', 'lead_convert_to_client_phone', $lead->phonenumber); ?>
                 <?php echo render_input('website', 'client_website', $lead->website); ?>
+                <?php echo render_input('zip', 'clients_zip', $lead->zip, input_attrs: ["onChange"=>"completeByCep()"]); ?>
                 <?php echo render_textarea('address', 'client_address', $lead->address); ?>
+                <?php echo render_input('district', 'client_district', $lead->district); ?>
                 <?php echo render_input('city', 'client_city', $lead->city); ?>
                 <?php echo render_input('state', 'client_state', $lead->state); ?>
                 <?php
@@ -45,7 +47,6 @@
            $selected                 = ($lead->country != 0 ? $lead->country : $customer_default_country);
            echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'clients_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
            ?>
-                 <?php echo render_input('zip', 'clients_zip', $lead->zip, input_attrs: ["onChange"=>"completeByCep()"]); ?>
                 <?php
            $not_mergable_customer_fields = ['userid', 'datecreated', 'leadid', 'default_language', 'default_currency', 'active'];
            $not_mergable_contact_fields  = ['id', 'userid', 'datecreated', 'is_primary', 'password', 'new_pass_key', 'new_pass_key_requested', 'last_ip', 'last_login', 'last_password_change', 'active', 'profile_image', 'direction'];

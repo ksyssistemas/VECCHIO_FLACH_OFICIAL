@@ -199,6 +199,10 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->address != '' ? $lead->address : '-') ?></dd>
+                        <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_district'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->district != '' ? $lead->district : '-') ?></dd>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_city'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -429,10 +433,12 @@
                 <?php echo render_input('company', 'lead_company', $value); ?>
             </div>
             <div class="col-md-6">
-            <?php $value = (isset($lead) ? $lead->zip : ''); ?>
+                <?php $value = (isset($lead) ? $lead->zip : ''); ?>
                 <?php echo render_input('zip', 'lead_zip', $value, input_attrs: ["onChange"=>"completeByCep()"]); ?>
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
+                <?php $value = (isset($lead) ? $lead->district : ''); ?>
+                <?php echo render_input('district', 'lead_district', $value); ?>
                 <?php $value = (isset($lead) ? $lead->city : ''); ?>
                 <?php echo render_input('city', 'lead_city', $value); ?>
                 <?php $value = (isset($lead) ? $lead->state : ''); ?>

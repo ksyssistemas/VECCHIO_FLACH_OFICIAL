@@ -181,6 +181,8 @@
 
                         <?php $value = (isset($client) ? $client->address : ''); ?>
                         <?php echo render_textarea('address', 'client_address', $value); ?>
+                        <?php $value = (isset($client) ? $client->district : ''); ?>
+                        <?php echo render_input('district', 'client_district', $value); ?>
                         <?php $value = (isset($client) ? $client->city : ''); ?>
                         <?php echo render_input('city', 'client_city', $value); ?>
                         <?php $value = (isset($client) ? $client->state : ''); ?>

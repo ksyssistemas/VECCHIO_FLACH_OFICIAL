@@ -11,6 +11,8 @@ class Proposals extends AdminController
         parent::__construct();
         $this->load->model('proposals_model');
         $this->load->model('currencies_model');
+        $this->load->helper('bemtevi_api');
+
     }
 
     public function index($proposal_id = '')
@@ -141,6 +143,7 @@ class Proposals extends AdminController
                     access_denied('proposals');
                 }
                 $id = $this->proposals_model->add($proposal_data);
+                $this->adicionar_suporte_BTV_proposal($proposal_data);
                 if ($id) {
                     set_alert('success', _l('added_successfully', _l('proposal')));
                     if ($this->set_proposal_pipeline_autoload($id)) {
@@ -154,6 +157,7 @@ class Proposals extends AdminController
                     access_denied('proposals');
                 }
                 $success = $this->proposals_model->update($proposal_data, $id);
+                $this->adicionar_suporte_BTV_proposal($proposal_data);
                 if ($success) {
                     set_alert('success', _l('updated_successfully', _l('proposal')));
                 }
@@ -773,28 +777,32 @@ class Proposals extends AdminController
              access_denied('Proposals Statuses');
          }
          if ($this->input->post()) {
-             $data = $this->input->post();
-             if (!$this->input->post('id')) {
-                 $inline = isset($data['inline']);
-                 if (isset($data['inline'])) {
-                     unset($data['inline']);
-                 }
-                 $id = $this->proposals_model->add_status($data);
-                 if (!$inline) {
-                     if ($id) {
-                         set_alert('success', _l('added_successfully', _l('proposals_status')));
-                     }
-                 } else {
-                     echo json_encode(['success' => $id ? true : false, 'id' => $id]);
-                 }
-             } else {
-                 $id = $data['id'];
-                 unset($data['id']);
-                 $success = $this->proposals_model->update_status($data, $id);
-                 if ($success) {
-                     set_alert('success', _l('updated_successfully', _l('proposals_status')));
-                 }
-             }
+            $data = $this->input->post();
+            if($data['id'] != 1){
+                if (!$this->input->post('id')) {
+                    $inline = isset($data['inline']);
+                    if (isset($data['inline'])) {
+                        unset($data['inline']);
+                    }
+                    $id = $this->proposals_model->add_status($data);
+                    if (!$inline) {
+                        if ($id) {
+                            set_alert('success', _l('added_successfully', _l('proposals_status')));
+                        }
+                    } else {
+                        echo json_encode(['success' => $id ? true : false, 'id' => $id]);
+                    }
+                } else {
+                    $id = $data['id'];
+                    unset($data['id']);
+                    $success = $this->proposals_model->update_status($data, $id);
+                    if ($success) {
+                        set_alert('success', _l('updated_successfully', _l('proposals_status')));
+                    }
+                }
+            }else{
+                set_alert('danger', _l('cant_delete_default', _l('proposals_status')));
+            }
          }
      }
  
@@ -807,6 +815,9 @@ class Proposals extends AdminController
          if (!$id) {
              redirect(admin_url('proposals/statuses'));
          }
+         if ($id == 1) {
+            redirect(admin_url('proposals/statuses'));
+        }
          $response = $this->proposals_model->delete_status($id);
          if (is_array($response) && isset($response['referenced'])) {
              set_alert('warning', _l('is_referenced', _l('proposals_status_lowercase')));
@@ -817,5 +828,48 @@ class Proposals extends AdminController
          }
          redirect(admin_url('proposals/statuses'));
      }
+/* Adicionar suporte no BTV com itens de proposta */
+public function adicionar_suporte_BTV_proposal($proposal_data) {
+    if($proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer"){
+       
+        //pegar codigo do usuario associado a proposta
+        $this->db->where('staffid', $proposal_data['assigned']);
+        $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+       
+        //pegar os dados do cliente da proposta
+        $this->db->where('userid', $proposal_data['rel_id']);
+        $costumer = $this->db->get(db_prefix() . 'clients')->row_array();
+        $problema = "";
+
+
+        foreach($proposal_data['items'] as $item){
+            $problema .= "<b>"._l('invoice_table_item_heading'). ":</b> ". $item['description'] . " ";
+            $problema .= "<b>"._l('invoice_items_list_description'). ":</b> ". $item['long_description'] . " ";
+            $problema .= "<b>"._l('invoice_table_quantity_heading'). ":</b> ". $item['qty'] . " ";
+            $problema .= "<b>"._l('invoice_table_rate_heading'). ":</b> ". $item['unit'] ." ". $item['rate'] . " ";
+            $problema .= "<b>"._l('invoice_table_amount_heading'). ":</b> ". $item['unit'] . ($item['rate']*$item['qty']);
+            $problema .= "<br>";
+        }
+        $problema .= "<b>"._l('invoice_subtotal'). ":</b> ". $proposal_data['subtotal'] ."<br>";
+        $problema .= "<b>"._l('invoice_discount'). ":</b> ". $proposal_data['discount_total'] ."<br>";
+        $problema .= "<b>"._l('invoice_adjustment'). ":</b> ". $proposal_data['adjustment'] ."<br>";
+        $problema .= "<b>"._l('invoice_total'). ":</b> ". $proposal_data['total'];
+
+
+        $dados = [
+            "cod_usuario"=> $staff['idBTV'],
+            "cod_situacao"=> "2",
+            "cod_classe"=> "1",
+            "cod_categoria"=> "1",
+            "cod_cliente"=> $costumer['codbtv'],
+            "cod_usuario_cadastro"=> $staff['idBTV'],
+            "problema"=> $problema,
+            "titulo"=> $proposal_data['subject']
+        ];
+
+
+        criar_suporte_btv($dados);
+    }
+ }
 
 }

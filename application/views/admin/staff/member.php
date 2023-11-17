@@ -127,6 +127,9 @@
                                         </span>
                                     </div>
                                 </div>
+                                <span id="suggestion_id_btv" class="text-info"></span>
+                                <?php $value = (isset($member) ? $member->idBTV : ''); ?>
+                                <?php echo render_input('idBTV', 'staff_add_edit_idBTV', $value,  input_attrs: ["onClick"=>"suggestion_id_btv()"]); ?>
                                 <?php $value = (isset($member) ? $member->phonenumber : ''); ?>
                                 <?php echo render_input('phonenumber', 'staff_add_edit_phonenumber', $value); ?>
                                 <div class="form-group">
@@ -632,6 +635,37 @@
             }
         });
     });
+    function suggestion_id_btv(){
+        var nome = $("#firstname").val();
+        var texto_suggestion = "";
+        $("#suggestion_id_btv").html(nome);
+
+
+        var resposta = $.ajax({
+        async: false,
+        url: "<?php echo site_url('admin/bemtevi/retornar_usuario/?nome='); ?>" + nome,
+        type: 'get',
+        data: { 'GetConfig': 'YES' },
+        dataType: 'JSON'
+    }).responseJSON;
+
+
+
+
+        resposta.usuarios.forEach(function(usuario) {
+            texto_suggestion += "Usuário: " + usuario.nome + ", ID no Bemtevi: "+ usuario.cod_usuario + "<br>";
+        });
+
+
+        if(texto_suggestion != ""){
+            $("#suggestion_id_btv").html(texto_suggestion);
+        }else{
+            texto_suggestion = nome + " não encontrado, consultar ID diretamente no Bemtevi."
+            $("#suggestion_id_btv").html(texto_suggestion);
+        }
+       
+    }
+
     </script>
     </body>
 

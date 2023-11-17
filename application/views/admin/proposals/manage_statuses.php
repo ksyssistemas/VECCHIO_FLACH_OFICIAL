@@ -36,6 +36,7 @@
                                     </td>
                                     <td>
                                         <div class="tw-flex tw-items-center tw-space-x-3">
+                                        <?php if ($status['id'] != 1) { //Se for status aceito nao pode editar?>
                                             <a href="#"
                                                 onclick="edit_status(this,<?php echo $status['id']; ?>);return false;"
                                                 data-color="<?php echo $status['color']; ?>"
@@ -49,6 +50,7 @@
                                                 class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
                                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                                             </a>
+                                            <?php } ?>
                                             <?php } ?>
                                         </div>
                                     </td>

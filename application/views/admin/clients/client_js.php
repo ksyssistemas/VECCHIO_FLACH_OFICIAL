@@ -182,6 +182,12 @@ $(function() {
         vRules = {
             company: 'required',
             vat: 'required',
+            country: 'required',
+            city: 'required',
+            zip: 'required',
+            address: 'required',
+            district: 'required',
+            state: 'required',
         }
     }
 

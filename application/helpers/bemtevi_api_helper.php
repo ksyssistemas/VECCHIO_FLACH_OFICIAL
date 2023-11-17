@@ -69,7 +69,8 @@ function adicionar_cliente_btv($data){
                 "pessoafisica"=>$data['pessoafisica'],
                 "inscricaoestadual"=>$data['inscricaoestadual'],
                 "razaosocial"=>$data['razaosocial'],
-                "rg"=>$data['rg'] 
+                "rg"=>$data['rg'],
+                "consultor_responsavel"=>$data['consultor_responsavel']
             ]
         ];
         
@@ -100,6 +101,224 @@ function adicionar_celular_btv($data){
             "parametros" => [
                 "cod_cliente"=>$data["cod_cliente"],
                 "numero"=>$data["numero"]
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    }
+    return false;
+}
+
+function adicionar_endereco_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+    if(file_exists($file)){
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Cliente.adicionar_endereco_cliente",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "cod_cliente"=>$data["cod_cliente"],
+                "cod_estado"=>$data["cod_estado"],
+                "cod_cidade"=>$data["cod_cidade"],
+                "bairro"=>$data["bairro"],
+                "rua"=>$data["rua"],
+                "cep"=>$data["cep"],
+                "complemento"=>"",
+                "caixa_postal"=>"",
+                "cod_predio"=>"",
+                "codcep"=>"",
+                "obs"=>"",
+                "latitude"=>"",
+                "longitude"=>"",
+                "tipoendereco"=>"",
+                "numeroEndereco"=>"",
+                "numeroApto"=>"",
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    }
+    return false;
+}
+
+
+function retornar_codigo_estado_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+    if(file_exists($file)){
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Endereco.retornar_estado_por_nome",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "nome_estado"=>$data['estado']
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+
+
+        foreach( $response['lista_estados'] as $estado){
+            if($data['estado'] == $estado['cod_estado'] || $data['estado'] == $estado['nome']){
+                return $estado['cod_cidade'];//deveria ser cod_estado mas na API está assim
+            }
+        }
+    }
+    return false;
+}
+
+
+function retornar_codigo_cidade_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+    if(file_exists($file)){
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Endereco.retornar_cidade_por_nome",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "nome_cidade"=>$data['cidade']
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        foreach( $response['lista_cidades'] as $cidade){
+            if($data['cidade'] == $cidade['nome'] && $data['cod_estado'] == $cidade['cod_estado']){
+                return $cidade['cod_cidade'];
+            }
+        }
+    }
+    return false;
+}
+
+function criar_suporte_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+
+
+    if(file_exists($file)){
+
+
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Suporte.criar_suporte",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "cod_usuario"=> $data['cod_usuario'],
+                "cod_situacao"=> $data['cod_situacao'],
+                "cod_classe"=> $data['cod_classe'],
+                "cod_categoria"=> $data['cod_categoria'],
+                "cod_cliente"=> $data['cod_cliente'],
+                "cod_usuario_cadastro"=> $data['cod_usuario_cadastro'],
+                "problema"=> $data['problema'],
+                "titulo"=> $data['titulo']
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    }
+    return false;
+}
+
+function retornar_usuarios_pelo_nome_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+
+
+    if(file_exists($file)){
+
+
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Usuario.retornar_usuarios_pelo_nome",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "nome" => $data
+            ]
+        ];
+       
+        $response = requestCurl($conn['url'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    }
+    return false;
+}
+
+
+function adicionar_email_btv($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+
+    if(file_exists($file)){
+
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Cliente.adicionar_email",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "cod_cliente"=>$data["cod_cliente"],
+                "email"=>$data["email"]
             ]
         ];
        
