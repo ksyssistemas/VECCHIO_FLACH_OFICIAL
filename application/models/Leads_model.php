@@ -78,6 +78,8 @@ class Leads_model extends App_Model
     {
         //deixar o vat(cpf/cnpj) somente com numeros
         $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
+        //deixar zip code apenas com numeros
+        $data['zip'] = preg_replace('/[^0-9]/', '', $data['zip']);
         if (isset($data['custom_contact_date']) || isset($data['custom_contact_date'])) {
             if (isset($data['contacted_today'])) {
                 $data['lastcontact'] = date('Y-m-d H:i:s');
@@ -209,6 +211,8 @@ class Leads_model extends App_Model
     {
          //deixar o vat(cpf/cnpj) somente com numeros
          $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
+         //deixar zip code apenas com numeros
+        $data['zip'] = preg_replace('/[^0-9]/', '', $data['zip']);
         $current_lead_data = $this->get($id);
         $current_status    = $this->get_status($current_lead_data->status);
         if ($current_status) {

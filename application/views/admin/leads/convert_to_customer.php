@@ -47,6 +47,16 @@
            $selected                 = ($lead->country != 0 ? $lead->country : $customer_default_country);
            echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'clients_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
            ?>
+             <?php if(integracao_btv()) { ?>
+                <div class="form-group" app-field-wrapper="idBTV">
+                <label for="idBTV" class="control-label">
+                    <?php echo _l('staff_add_edit_idBTV'); ?> - <?php echo _l('staff_idBTV_information_field'); ?>
+                </label>
+                <input type="hidden" id="idBTV" name="idBTV" value="<?=$staff['idBTV']?>"><br>
+                <?=($staff['idBTV'])?$staff['idBTV']:_l('staff_idBTV_notfound_assigned')." ".$staff['firstname']." ".$staff['lastname'];?>
+            </div>
+            <?php } ?>
+
                 <?php
            $not_mergable_customer_fields = ['userid', 'datecreated', 'leadid', 'default_language', 'default_currency', 'active'];
            $not_mergable_contact_fields  = ['id', 'userid', 'datecreated', 'is_primary', 'password', 'new_pass_key', 'new_pass_key_requested', 'last_ip', 'last_login', 'last_password_change', 'active', 'profile_image', 'direction'];

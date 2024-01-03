@@ -203,7 +203,7 @@
                                         } elseif (isset($status_id)) {
                                             $selected = $status_id;
                                         }
-                                        echo render_proposals_status_select($statuses, $selected, 'proposals_add_edit_status');
+                                        echo render_proposals_status_select($statuses, $selected, 'proposals_add_edit_status', select_attrs:["onChange" => "validate_contains_idBTV()"]);
                                          ?>
                                     </div>
                                     <div class="col-md-6">
@@ -216,10 +216,12 @@
                                                     }
                                                 }
                                             }
-                                            echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], 'proposal_assigned', $selected);
+                                            echo render_select('assigned', $staff, ['staffid', ['firstname', 'lastname']], 'proposal_assigned', $selected, select_attrs:["onChange" => "validate_contains_idBTV()"]);
                                         ?>
                                     </div>
                                 </div>
+                                <input id="idBTV" type="hidden" value="">
+                                <div id ="staff_idBTV_notfound_assigned" class="hide text-danger"><?=_l('staff_idBTV_notfound_assigned')?></div>
                                 <?php $value = (isset($proposal) ? $proposal->proposal_to : ''); ?>
                                 <?php echo render_input('proposal_to', 'proposal_to', $value); ?>
                                 <?php $value = (isset($proposal) ? $proposal->address : ''); ?>
@@ -412,6 +414,30 @@ function validate_proposal_form() {
         currency: 'required',
     });
 }
+
+function validate_contains_idBTV(){
+    var status = $("#status").val();
+    var assigned = $("#assigned").val();
+
+
+    var idBTV=$.ajax({
+    async:false,
+    url:admin_url + "staff/verify_contains_idBTV",
+    type:'post',
+    data:{'GetConfig':'YES', 'staffid': assigned},
+    dataType:"JSON"
+    }).responseJSON;
+    if(status == 1 && idBTV == null){
+        $("#staff_idBTV_notfound_assigned").removeClass('hide');
+        $("#idBTV").attr('required', 'required');
+        return false;
+    }else{
+        $("#staff_idBTV_notfound_assigned").addClass('hide');
+        $("#idBTV").removeAttr('required');
+        return true;
+    }
+}
+
 </script>
 </body>
 

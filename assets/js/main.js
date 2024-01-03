@@ -4912,6 +4912,8 @@ function validate_lead_convert_to_client_form() {
     district: 'required',
     state: 'required',
     phonenumber: "required",
+    //somente para quem tem integração idBTV
+    idBTV: "required",
     password: {
       required: {
         depends: function (element) {

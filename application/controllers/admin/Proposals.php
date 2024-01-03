@@ -138,6 +138,17 @@ class Proposals extends AdminController
     {
         if ($this->input->post()) {
             $proposal_data = $this->input->post();
+
+            if (integracao_btv() && $proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer") {
+                //buscar dados do consultor responsavel
+                $this->db->where('staffid', $proposal_data['assigned']);
+                $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+                if($staff['idBTV'] == NULL){
+                    set_alert('warning', _l('staff_idBTV_notfound_assigned').$staff['firstname']." ".$staff['lastname']);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+
             if ($id == '') {
                 if (!has_permission('proposals', '', 'create')) {
                     access_denied('proposals');

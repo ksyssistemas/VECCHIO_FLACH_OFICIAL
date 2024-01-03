@@ -364,6 +364,12 @@ class Leads extends AdminController
             $data['purposes'] = $this->gdpr_model->get_consent_purposes($id, 'lead');
         }
         $data['lead'] = $this->leads_model->get($id);
+        if ($integracao_btv = integracao_btv()) {
+            //buscar dados do consultor responsavel
+            $this->db->where('staffid', $data['lead']->assigned);
+            $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+            $data['staff'] = $staff;
+        }
         $this->load->view('admin/leads/convert_to_customer', $data);
     }
 
@@ -383,6 +389,22 @@ class Leads extends AdminController
             $data             = $this->input->post();
             $data['password'] = $this->input->post('password', false);
 
+            //deixar zip code apenas com numeros
+            $data['zip'] = preg_replace('/[^0-9]/', '', $data['zip']);
+
+            if ($integracao_btv = integracao_btv()) {
+                unset($data['idBTV']);
+                //buscar dados do consultor responsavel
+                $lead = $this->leads_model->get($data['leadid']);
+                $this->db->where('staffid', $lead->assigned);
+                $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+                if($staff['idBTV'] == NULL){
+                    set_alert('warning', _l('staff_idBTV_notfound_assigned').$staff['firstname']." ".$staff['lastname']);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+
+            
             $original_lead_email = $data['original_lead_email'];
             unset($data['original_lead_email']);
 
