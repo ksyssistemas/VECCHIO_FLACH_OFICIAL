@@ -90,7 +90,7 @@
                         <?php echo render_input('fantasy_name', 'fantasy_name', $value, form_group_class: $form_group_class); ?>
                         <?php if (get_option('company_requires_vat_number_field') == 1) {
                       $value = (isset($client) ? $client->vat : '');
-                      echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()"]);
+                      echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number");
 
                   } ?>
                         <?php hooks()->do_action('before_customer_profile_phone_field', $client ?? null); ?>
