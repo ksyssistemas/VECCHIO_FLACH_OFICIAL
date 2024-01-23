@@ -660,6 +660,7 @@ $lang['staff_add_edit_note_description']      = 'descrição da nota';
 $lang['staff_add_edit_idBTV']                 = 'ID do Usuário no Bemtevi';
 $lang['staff_idBTV_notfound_assigned']        = 'ID do Bemtevi não vinculado ao usuário ';
 $lang['staff_idBTV_information_field']        = 'Preenchido via sistema no perfil do usuário';
+$lang['address_not_insert_BTV']               = 'O endereço não foi inserido no Bemtevi, tente novamente.';
 
 $lang['staff_notes_table_description_heading'] = 'Nota';
 $lang['staff_notes_table_addedfrom_heading']   = 'Adicionado Por';

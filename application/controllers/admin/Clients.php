@@ -121,7 +121,7 @@ class Clients extends AdminController
                 }
                 $data = $this->input->post();
                 $success = $this->clients_model->update($data, $id);
-                if ($success == true) {
+                if ($success == true && integracao_btv()) {
                     //instanciar o cliente
                     $client = $this->clients_model->get($id);
                     if($client->codbtv != null){
@@ -133,6 +133,36 @@ class Clients extends AdminController
                     //adicionar o celular com os dados
                     $add_celular = adicionar_celular_btv($dados['celular']);
                     }
+                     //passar os dados do estado
+                     $dados['endereco']['estado'] = $data['state'];
+                     //buscar codigo do estado no bemtevi e colocar na variavel
+                     $tentativa = 0;
+                     while($tentativa <=5){
+                        $tentativa++;
+                        if($dados['endereco']['cod_estado']){
+                            continue;
+                        }
+                        $dados['endereco']['cod_estado'] = retornar_codigo_estado_btv($dados['endereco']);
+                     }
+                     if(!$dados['endereco']['cod_estado']){
+                         set_alert('warning', _l('address_not_insert_BTV'));
+                         redirect(admin_url('clients/client/' . $id));
+                     }
+                     //passar os dados da cidade
+                     $dados['endereco']['cidade'] = $data['city'];
+                     //buscar codigo da cidade no bemtevi e colocar na variavel
+                     $dados['endereco']['cod_cidade'] = retornar_codigo_cidade_btv($dados['endereco']);
+                     if(!$dados['endereco']['cod_cidade']){
+                         set_alert('warning', _l('address_not_insert_BTV'));
+                         redirect(admin_url('clients/client/' . $id));
+                     }
+                     //passar todos os dados de endereço restantes
+                     $dados['endereco']['cod_cliente'] = $client->codbtv;
+                     $dados['endereco']['bairro'] = $data['district'];
+                     $dados['endereco']['rua'] = $data['address'];
+                     $dados['endereco']['cep'] = $data['zip'];
+                     //adicionar o endereço no bemtevi
+                     $add_endereco = adicionar_endereco_btv($dados['endereco']);
                     set_alert('success', _l('updated_successfully', _l('client')));
                 }
                 redirect(admin_url('clients/client/' . $id));
