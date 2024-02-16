@@ -32,6 +32,10 @@ $validationFields = [
     'value'=>'company',
     'name'=>_l('lead_company'),
   ],
+  [
+    'value'=>'vat',
+    'name'=>_l('client_vat_number'),
+  ],
 ];
 $validationFields = hooks()->apply_filters('lead_available_dupicate_validation_fields_option', $validationFields);
 ?>
