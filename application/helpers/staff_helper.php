@@ -47,8 +47,8 @@ function get_available_staff_permissions($data = [])
             'capabilities' => $allPermissionsArray,
         ],
         'customers' => [
-            'name'         => _l('clients'),
-            'capabilities' => $withNotApplicableViewOwn,
+            'name'         => _l('clients'), 
+            'capabilities' => array_merge($withNotApplicableViewOwn, ['edit_own' => _l('permission_edit_own')] ),
             'help'         => [
                 'view_own' => _l('permission_customers_based_on_admins'),
             ],
@@ -167,6 +167,7 @@ function get_available_staff_permissions($data = [])
             'name'         => _l('leads'),
             'capabilities' => [
                 'view'   => $viewGlobalName,
+                'edit_own' => _l('permission_edit_own'),
                 'delete' => _l('permission_delete'),
             ],
             'help' => [

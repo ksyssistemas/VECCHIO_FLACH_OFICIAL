@@ -160,6 +160,16 @@
                         <?php echo _l('client_vat_number'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
                         <?php echo(isset($lead) && $lead->vat != '' ? $lead->vat : '-') ?></dd>
+                        <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_company'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->company != '' ? $lead->company : '-') ?></dd>
+                        <?php if($lead->is_cnpj){ ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('fantasy_name'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->fantasy_name != '' ? $lead->fantasy_name : '-') ?></dd>
+                    <?php } ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l($lead->is_cnpj ? 'client_ie' : 'client_rg'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
@@ -189,16 +199,6 @@
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->lead_value != 0 ? app_format_money($lead->lead_value, $base_currency->id) : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_company'); ?>
-                    </dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo(isset($lead) && $lead->company != '' ? $lead->company : '-') ?></dd>
-                        <?php if($lead->is_cnpj){ ?>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('fantasy_name'); ?>
-                    </dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo(isset($lead) && $lead->fantasy_name != '' ? $lead->fantasy_name : '-') ?></dd>
-                    <?php } ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_address'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">

@@ -94,6 +94,14 @@ class Leads extends AdminController
                     'leadView' => $id ? $this->_get_lead_data($id) : [],
                 ]);
             } else {
+                if (!is_staff_member() || ($id != '' && !$this->leads_model->staff_can_access_lead($id))) {
+                    if(has_permission('leads', '', 'edit_own')){
+                        $lead = $this->leads_model->get($id);
+                        if($lead->addedfrom != get_staff_user_id()){
+                            ajax_access_denied();
+                        }
+                    }
+                }
                 $emailOriginal   = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
                 $proposalWarning = false;
                 $message         = '';
@@ -1370,7 +1378,7 @@ class Leads extends AdminController
 
 
     public function validate_unique_field_and_client_vat(){
-        if ($this->input->post()) {
+        if ($row->{$field} == $value) {
 
 
             $lead_id = $this->input->post('lead_id');
@@ -1389,7 +1397,8 @@ class Leads extends AdminController
                 $this->db->where('id', $lead_id);
                 $row = $this->db->get(db_prefix() . 'leads')->row();
                 if ($row->{$field} == $value) {
-                    $lead = 0;
+                    echo json_encode(true);
+                    die();
                 }
             }
             $client = total_rows(db_prefix() . 'clients', [ $field => $value ]);

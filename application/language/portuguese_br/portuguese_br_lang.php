@@ -2418,6 +2418,7 @@ $lang['project_overview_unbilled_hours']                  = 'Horas não Faturada
 $lang['calendar_first_day']                               = 'Primeiro dia';
 $lang['permission_view']                                  = 'Visualizar';
 $lang['permission_edit']                                  = 'Editar';
+$lang['permission_edit_own']                              = 'Editar (criados somente por ele)';
 $lang['permission_create']                                = 'Criar';
 $lang['permission_delete']                                = 'Deletar';
 $lang['permission']                                       = 'Permissão';

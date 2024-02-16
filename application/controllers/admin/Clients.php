@@ -116,7 +116,14 @@ class Clients extends AdminController
             } else {
                 if (!has_permission('customers', '', 'edit')) {
                     if (!is_customer_admin($id)) {
-                        access_denied('customers');
+                        $client = $this->clients_model->get($id);
+                        if(has_permission('customers', '', 'edit_own')){
+                            if($client->addedfrom != get_staff_user_id()){
+                            access_denied('customers');
+                            }
+                        } else {
+                            access_denied('customers');
+                        }
                     }
                 }
                 $data = $this->input->post();
