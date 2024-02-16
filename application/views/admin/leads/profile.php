@@ -156,10 +156,14 @@
                         <?php echo _l('lead_add_edit_name'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-name">
                         <?php echo(isset($lead) && $lead->name != '' ? $lead->name : '-') ?></dd>
-                        <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('client_vat_number'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
                         <?php echo(isset($lead) && $lead->vat != '' ? $lead->vat : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                        <?php echo _l($lead->is_cnpj ? 'client_ie' : 'client_rg'); ?></dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
+                        <?php echo(isset($lead) && $lead->rg_ie != '' ? $lead->rg_ie : '-') ?></dd>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_title'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -388,6 +392,9 @@
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
                 <?php $value = (isset($lead) ? $lead->vat : ''); ?>
                 <?php echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number"); ?>
+                <?php $value = (isset($lead) ? $lead->rg_ie : ''); $rg_or_ie = ($lead->is_cnpj ? 'client_ie' : 'client_rg')?>
+                <?php echo render_input('rg_ie', $rg_or_ie, $value); ?>
+                <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
                 <?php echo render_input('company', 'lead_company', $value); ?>
                 <?php $value = (isset($lead) ? $lead->fantasy_name : ''); $form_group_class = ($lead->is_cnpj ? '' : 'hide')?>
@@ -429,8 +436,6 @@
                     </div>
                     </label>
                 </div>
-                <?php $value = (isset($lead) ? $lead->company : ''); ?>
-                <?php echo render_input('company', 'lead_company', $value); ?>
             </div>
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->zip : ''); ?>

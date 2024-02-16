@@ -29,6 +29,9 @@
                 <?php echo render_input('firstname', 'lead_convert_to_client_firstname', $firstname); ?>
                 <?php echo render_input('lastname', 'lead_convert_to_client_lastname', $lastname); ?>
                 <?php echo render_input('vat', 'client_vat_number', $lead->vat, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number"); ?>
+                <?php $rg_or_ie = ($lead->is_cnpj ? 'client_ie' : 'client_rg')?>
+                <?php echo render_input('rg_ie', $rg_or_ie, $lead->rg_ie); ?>
+                <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
                 <?php echo render_input('title', 'contact_position', $lead->title); ?>
                 <?php echo render_input('email', 'lead_convert_to_email', $lead->email); ?>
                 <?php echo render_input('company', 'lead_company', $lead->company); ?>

@@ -93,6 +93,9 @@
                       echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number");
 
                   } ?>
+                        <?php $rg_or_ie = ($client->is_cnpj ? 'client_ie' : 'client_rg')?>
+                        <?php echo render_input('rg_ie', $rg_or_ie, $client->rg_ie); ?>
+                        <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
                         <?php hooks()->do_action('before_customer_profile_phone_field', $client ?? null); ?>
                         <?php $value = (isset($client) ? $client->phonenumber : ''); ?>
                         <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>

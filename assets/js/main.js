@@ -9348,8 +9348,10 @@ function showOrNotFantasyName(){
   console.log(quantidadeCaractere);
   if(quantidadeCaractere == 14){
     $("#fantasy_name").parent().removeClass('hide');
+    $("#rg_ie").parent().children(".control-label").html($("#name_client_ie").html());
   }else{
     $("#fantasy_name").parent().addClass('hide');
+    $("#rg_ie").parent().children(".control-label").html($("#name_client_rg").html());
   }
 }
 
