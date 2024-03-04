@@ -182,10 +182,14 @@ $(function() {
         vRules = {
             company: 'required',
             vat: 'required',
+            rg_ie: 'required',
+            date_birth_foundation: 'required',
             country: 'required',
             city: 'required',
             zip: 'required',
+            cod_ibge: 'required',
             address: 'required',
+            address_number: 'required',
             district: 'required',
             state: 'required',
         }

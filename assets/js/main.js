@@ -4905,10 +4905,14 @@ function validate_lead_convert_to_client_form() {
     firstname: "required",
     lastname: "required",
     vat: "required",
+    rg_ie: "required",
+    date_birth_foundation: "required",
     country: 'required',
     city: 'required',
     zip: 'required',
+    cod_ibge: 'required',
     address: 'required',
+    address_number: 'required',
     district: 'required',
     state: 'required',
     phonenumber: "required",
@@ -9326,6 +9330,7 @@ function completeByCep(){
   $("#city").val(viacep.localidade);
   $("#address").val(viacep.logradouro);
   $("#district").val(viacep.bairro);
+  $("#cod_ibge").val(viacep.ibge);
 }
 
 
@@ -9348,10 +9353,16 @@ function showOrNotFantasyName(){
   console.log(quantidadeCaractere);
   if(quantidadeCaractere == 14){
     $("#fantasy_name").parent().removeClass('hide');
+    $("#fantasy_name").attr("required", "required");
     $("#rg_ie").parent().children(".control-label").html($("#name_client_ie").html());
+    $("#date_birth_foundation").parent().parent().children(".control-label").html($("#name_client_date_foundation").html());
+    $("#date_birth_foundation").parent().children(".control-label").html($("#name_client_date_foundation").html());
   }else{
     $("#fantasy_name").parent().addClass('hide');
+    $("#fantasy_name").removeAttr("required");
     $("#rg_ie").parent().children(".control-label").html($("#name_client_rg").html());
+    $("#date_birth_foundation").parent().parent().children(".control-label").html($("#name_client_date_birth").html());
+    $("#date_birth_foundation").parent().children(".control-label").html($("#name_client_date_birth").html());
   }
 }
 

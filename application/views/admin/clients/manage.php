@@ -35,7 +35,7 @@
                   ?>
                 </div>
                 <div class="_buttons">
-                    <?php if (has_permission('customers', '', 'create') && !integracao_btv()) { ?>
+                    <?php if (has_permission('customers', '', 'create') && !integracao_logosystem()) { ?>
                     <a href="<?php echo admin_url('clients/client'); ?>"
                         class="btn btn-primary mright5 test pull-left display-block">
                         <i class="fa-regular fa-plus tw-mr-1"></i>

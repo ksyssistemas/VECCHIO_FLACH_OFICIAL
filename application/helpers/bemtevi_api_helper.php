@@ -24,6 +24,15 @@ function integracao_hd($client_area = false)
     }
     return false;
 }
+function integracao_logosystem($client_area = false)
+{
+    $CI = &get_instance();
+    if (get_option('integrado_logosystem') == 1) {
+        return true;
+    }
+    return false;
+    
+}
 
 function requestCurl($url, $parametros, $method = 'POST') {
 
@@ -326,5 +335,55 @@ function adicionar_email_btv($data){
         $response = json_decode(json_encode($response),true);
         return $response;
     }
+    return false;
+}
+
+function adicionar_cliente_logosystem($data){
+    $file = (APPPATH."configConnectionBTV.json");
+
+    //verificar se é CPF ou CNPJ
+    if(strlen($data['cpf_cnpj']) > 11){
+        $data['rg'] = "";
+    }else{
+        $data['inscricao_estadual'] = "";
+    }
+
+    if(file_exists($file)){
+
+        $conn = json_decode(file_get_contents($file),true);
+        $param = [
+            "funcao"=>"Logosystem.criar_cliente",
+                "bd" => [
+                "ip" => $conn["baseDados"]["ip"],
+                "user" => $conn["baseDados"]["user"],
+                "password" => $conn["baseDados"]["password"],
+                "db" => $conn["baseDados"]["db"],
+                "port" => $conn["baseDados"]["port"]
+            ],
+            "parametros" => [
+                "url" => $conn['url_logosystem'], 
+                "nome" => $data['nome'],
+                "nome_fantasia" => $data['nome_fantasia'], 
+                "cpf_cnpj"=>$data['cpf_cnpj'],
+                "rg"=>$data['rg'],
+                "inscricao_estadual"=>$data['inscricao_estadual'],
+                "email"=>$data['email'],
+                "rua"=>$data['rua'],
+                "numero"=>$data['numero'],
+                "bairro"=>$data['bairro'],
+                "cep"=>$data['cep'],
+                "cidade_ibge"=>$data['cidade_ibge'],
+                "ddd"=>$data['ddd'],
+                "fone"=>$data['fone'],
+                "contato"=>$data['contato'],
+                "data_nascimento"=>$data['data_nascimento'],
+                "token"=>$conn['token_logosystem'],
+            ]
+        ];
+        
+        $response = requestCurl($conn['url_crm_logosystem'],$param,"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    } 
     return false;
 }

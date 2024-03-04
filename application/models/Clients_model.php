@@ -129,6 +129,7 @@ class Clients_model extends App_Model
     {
         //deixar o vat(cpf/cnpj) somente com numeros
         $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
+        $data['date_birth_foundation']   = to_sql_date($data['date_birth_foundation']);
         $contact_data = [];
         // From Lead Convert to client
         if (isset($data['send_set_password_email'])) {
@@ -246,6 +247,7 @@ class Clients_model extends App_Model
         $data['vat'] = preg_replace('/[^0-9]/', '', $data['vat']);
         $updated = false;
         $data    = $this->check_zero_columns($data);
+        $data['date_birth_foundation']   = to_sql_date($data['date_birth_foundation']);
 
         $data = hooks()->apply_filters('before_client_updated', $data, $id);
 

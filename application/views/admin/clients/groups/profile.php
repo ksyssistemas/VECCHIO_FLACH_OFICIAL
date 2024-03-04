@@ -96,6 +96,9 @@
                         <?php $rg_or_ie = ($client->is_cnpj ? 'client_ie' : 'client_rg')?>
                         <?php echo render_input('rg_ie', $rg_or_ie, $client->rg_ie); ?>
                         <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
+                        <?php $birth_or_foundation = ($client->is_cnpj ? 'client_date_foundation' : 'client_date_birth');?>
+                        <?php echo render_date_input('date_birth_foundation', $birth_or_foundation, (isset($client) ? _d($client->date_birth_foundation) : '')); ?>
+                        <label id="name_client_date_foundation" class="hide"><?=_l('client_date_foundation')?></label><label id="name_client_date_birth" class="hide"><?=_l('client_date_birth')?></label>
                         <?php hooks()->do_action('before_customer_profile_phone_field', $client ?? null); ?>
                         <?php $value = (isset($client) ? $client->phonenumber : ''); ?>
                         <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>
@@ -184,6 +187,8 @@
 
                         <?php $value = (isset($client) ? $client->address : ''); ?>
                         <?php echo render_textarea('address', 'client_address', $value); ?>
+                        <?php $value = (isset($client) ? $client->address_number : ''); ?>
+                        <?php echo render_input('address_number', 'client_address_number', $value); ?>
                         <?php $value = (isset($client) ? $client->district : ''); ?>
                         <?php echo render_input('district', 'client_district', $value); ?>
                         <?php $value = (isset($client) ? $client->city : ''); ?>
@@ -192,6 +197,8 @@
                         <?php echo render_input('state', 'client_state', $value); ?>
                         <?php $value = (isset($client) ? $client->zip : ''); ?>
                         <?php echo render_input('zip', 'client_postal_code', $value, input_attrs: ["onChange"=>"completeByCep()"]); ?>
+                        <?php $value = (isset($client) ? $client->cod_ibge : ''); ?>
+                        <?php echo render_input('cod_ibge', 'client_cod_ibge', $value, input_attrs:["readonly"=>"readonly"]); ?>
                         <?php $countries       = get_all_countries();
                      $customer_default_country = get_option('customer_default_country');
                      $selected                 = (isset($client) ? $client->country : $customer_default_country);

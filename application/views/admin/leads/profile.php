@@ -172,8 +172,12 @@
                     <?php } ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l($lead->is_cnpj ? 'client_ie' : 'client_rg'); ?></dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1 lead-vat">
+                    <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->rg_ie != '' ? $lead->rg_ie : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                        <?php echo _l($lead->is_cnpj ? 'client_date_foundation' : 'client_date_birth'); ?></dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->date_birth_foundation != '' ? date('d/m/Y', strtotime($lead->date_birth_foundation)) : '-') ?></dd>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_title'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -203,7 +207,11 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->address != '' ? $lead->address : '-') ?></dd>
-                        <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_district'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('client_address_number'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->address_number != '' ? $lead->address_number : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_district'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->district != '' ? $lead->district : '-') ?></dd>
@@ -224,6 +232,9 @@
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_zip'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->zip != '' ? $lead->zip : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('client_cod_ibge'); ?></dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->cod_ibge != '' ? $lead->cod_ibge : '-') ?></dd>
                 </dl>
             </div>
             <div class="col-md-4 col-xs-12 lead-information-col">
@@ -392,13 +403,16 @@
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
                 <?php $value = (isset($lead) ? $lead->vat : ''); ?>
                 <?php echo render_input('vat', 'client_vat_number', $value, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number"); ?>
-                <?php $value = (isset($lead) ? $lead->rg_ie : ''); $rg_or_ie = ($lead->is_cnpj ? 'client_ie' : 'client_rg')?>
+                <?php $value = (isset($lead) ? $lead->rg_ie : ''); $rg_or_ie = ($lead->is_cnpj ? 'client_ie' : 'client_rg');?>
                 <?php echo render_input('rg_ie', $rg_or_ie, $value); ?>
                 <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
                 <?php echo render_input('company', 'lead_company', $value); ?>
                 <?php $value = (isset($lead) ? $lead->fantasy_name : ''); $form_group_class = ($lead->is_cnpj ? '' : 'hide')?>
                 <?php echo render_input('fantasy_name', 'fantasy_name', $value, form_group_class: $form_group_class); ?>
+                <?php $value = (isset($lead) ? _d($lead->date_birth_foundation) : ''); $birth_or_foundation = ($lead->is_cnpj ? 'client_date_foundation' : 'client_date_birth');?>
+                <?php echo render_date_input('date_birth_foundation', $birth_or_foundation, $value); ?>
+                <label id="name_client_date_foundation" class="hide"><?=_l('client_date_foundation')?></label><label id="name_client_date_birth" class="hide"><?=_l('client_date_birth')?></label>
                 <?php $value = (isset($lead) ? $lead->title : ''); ?>
                 <?php echo render_input('title', 'lead_title', $value); ?>
                 <?php $value = (isset($lead) ? $lead->email : ''); ?>
@@ -440,8 +454,12 @@
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->zip : ''); ?>
                 <?php echo render_input('zip', 'lead_zip', $value, input_attrs: ["onChange"=>"completeByCep()"]); ?>
+                <?php $value = (isset($lead) ? $lead->cod_ibge : ''); ?>
+                <?php echo render_input('cod_ibge', 'client_cod_ibge', $value, input_attrs: ["readonly"=>"readonly"]); ?>
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
+                <?php $value = (isset($lead) ? $lead->address_number : ''); ?>
+                <?php echo render_input('address_number', 'client_address_number', $value, type: "number"); ?>
                 <?php $value = (isset($lead) ? $lead->district : ''); ?>
                 <?php echo render_input('district', 'lead_district', $value); ?>
                 <?php $value = (isset($lead) ? $lead->city : ''); ?>

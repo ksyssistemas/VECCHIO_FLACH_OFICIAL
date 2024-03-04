@@ -706,9 +706,30 @@ class Leads extends AdminController
                       $dados['endereco']['cep'] = $data['zip'];
                       //adicionar o endereço no bemtevi
                       $add_endereco = adicionar_endereco_btv($dados['endereco']);
-  
-
- 
+                }
+                //exportar o lead que virou cliente para a base do logosystem como um cliente
+                if ($integracao_logosystem = integracao_logosystem()) {
+                    $dados = [
+                        "nome" => $data['company'],
+                        "nome_fantasia" => $data['fantasy_name'], 
+                        "cpf_cnpj"=>$data['vat'],
+                        "rg"=>$data['rg_ie'],
+                        "inscricao_estadual"=>$data['rg_ie'],
+                        "email"=>$data['email'],
+                        "rua"=>$data['address'],
+                        "numero"=>$data['address_number'],
+                        "bairro"=>$data['district'],
+                        "cep"=>$data['zip'],
+                        "cidade_ibge"=>$data['cod_ibge'],
+                        "ddd"=>"",
+                        "fone"=>$data['phonenumber'],
+                        "data_nascimento"=>$data['date_birth_foundation'],
+                    ];
+                    $add_cliente_logosystem = adicionar_cliente_logosystem($dados);
+                    
+                    //vinculuar o cliente com o id retornado do logosystem
+                    $this->db->where('userid', $id);
+                    $this->db->update(db_prefix() . 'clients', ['cod_logosystem' => $add_cliente_logosystem['codigo']]);
                 }
 
                 redirect(admin_url('clients/client/' . $id));
