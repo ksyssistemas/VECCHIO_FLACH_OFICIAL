@@ -4931,7 +4931,7 @@ function validate_lead_convert_to_client_form() {
     email: {
       required: true,
       email: true,
-      remote: {
+      /*remote: {
         url: admin_url + "misc/contact_email_exists",
         type: "post",
         data: {
@@ -4940,7 +4940,7 @@ function validate_lead_convert_to_client_form() {
           },
           userid: "",
         },
-      },
+      },*/
     },
   };
   if (app.options.company_is_required == 1) {

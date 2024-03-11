@@ -709,6 +709,16 @@ class Leads extends AdminController
                 }
                 //exportar o lead que virou cliente para a base do logosystem como um cliente
                 if ($integracao_logosystem = integracao_logosystem()) {
+                    $telefone = $data['phonenumber'];
+                    $telefone = preg_replace('/[^0-9]/', '', $telefone);
+                    $ddd = substr($telefone, 0, 1);
+                    if($ddd == 0){
+                        $ddd = substr($telefone, 1, 2);
+                        $telefone = substr($telefone, 3, 11);
+                    }else{
+                        $ddd = substr($telefone, 0, 2);
+                        $telefone = substr($telefone, 2, 11);
+                    }
                     $dados = [
                         "nome" => $data['company'],
                         "nome_fantasia" => $data['fantasy_name'], 
@@ -721,8 +731,8 @@ class Leads extends AdminController
                         "bairro"=>$data['district'],
                         "cep"=>$data['zip'],
                         "cidade_ibge"=>$data['cod_ibge'],
-                        "ddd"=>"",
-                        "fone"=>$data['phonenumber'],
+                        "ddd"=>$ddd,
+                        "fone"=>$telefone,
                         "data_nascimento"=>$data['date_birth_foundation'],
                     ];
                     $add_cliente_logosystem = adicionar_cliente_logosystem($dados);

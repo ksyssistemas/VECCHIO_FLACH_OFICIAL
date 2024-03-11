@@ -31,11 +31,11 @@
                 <?php echo render_input('vat', 'client_vat_number', $lead->vat, input_attrs: ["onChange"=>"showOrNotFantasyName()", "minlength"=>"11", "maxlength"=>"14"], type: "number"); ?>
                 <?php $rg_or_ie = ($lead->is_cnpj ? 'client_ie' : 'client_rg');?>
                 <?php echo render_input('rg_ie', $rg_or_ie, $lead->rg_ie); ?>
-                <label id="name_client_ie" class="hide"><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><?=_l('client_rg')?></label>
+                <label id="name_client_ie" class="hide"><small class="req text-danger">* </small><?=_l('client_ie')?></label><label id="name_client_rg" class="hide"><small class="req text-danger">* </small><?=_l('client_rg')?></label>
                 <?php $birth_or_foundation = ($lead->is_cnpj ? 'client_date_foundation' : 'client_date_birth');?>
                 <?php $data_birth_or_foundation =(isset($lead) ? _d($lead->date_birth_foundation) : ''); ?>
                 <?php echo render_input('date_birth_foundation', $birth_or_foundation, $data_birth_or_foundation, input_attrs: ["placeholder"=>_l('client_date_example')]); ?>
-                <label id="name_client_date_foundation" class="hide"><?=_l('client_date_foundation')?></label><label id="name_client_date_birth" class="hide"><?=_l('client_date_birth')?></label>
+                <label id="name_client_date_foundation" class="hide"><small class="req text-danger">* </small><?=_l('client_date_foundation')?></label><label id="name_client_date_birth" class="hide"><small class="req text-danger">* </small><?=_l('client_date_birth')?></label>
                 <?php echo render_input('title', 'contact_position', $lead->title); ?>
                 <?php echo render_input('email', 'lead_convert_to_email', $lead->email); ?>
                 <?php echo render_input('company', 'lead_company', $lead->company); ?>
