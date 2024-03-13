@@ -4,10 +4,10 @@
             aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">
         <?php if (isset($lead)) {
-    if (!empty($lead->name)) {
-        $name = $lead->name;
-    } elseif (!empty($lead->company)) {
+    if (!empty($lead->company)) {
         $name = $lead->company;
+    } elseif (!empty($lead->name)) {
+        $name = $lead->name;
     } else {
         $name = _l('lead');
     }

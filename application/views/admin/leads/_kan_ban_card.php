@@ -20,11 +20,22 @@ if ($lead['status'] == $status['id']) { ?>
                     <?php echo staff_profile_image($lead['assigned'], [
                   'staff-profile-image-xs',
                   ]); ?></a>
-                <?php  } ?>
+                <?php  }  if (!empty($lead['company'])) {
+                        $name = $lead['company'];
+                        if (!empty($lead['lead_name'])) {
+                            $name .= ' - ' . $lead['lead_name'];
+                        }
+                    } elseif (!empty($lead['lead_name'])) {
+                        $name = $lead['lead_name'];
+                    } else {
+                        $name = _l('lead');
+                    }
+                    ?>
+
                 <a href="<?php echo admin_url('leads/index/' . $lead['id']); ?>"
                     onclick="init_lead(<?php echo $lead['id']; ?>);return false;" class="pull-left">
                     <span
-                        class="inline-block mtop10 mbot10">#<?php echo $lead['id'] . ' - ' . $lead['lead_name']; ?></span>
+                    class="inline-block mtop10 mbot10">#<?php echo $lead['id'] . ' - ' . $name; ?></span>
                 </a>
             </div>
             <div class="col-md-12">
