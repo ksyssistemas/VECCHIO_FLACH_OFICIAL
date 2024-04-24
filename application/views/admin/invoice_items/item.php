@@ -9,7 +9,7 @@
                     <span class="add-title"><?php echo _l('invoice_item_add_heading'); ?></span>
                 </h4>
             </div>
-            <?php echo form_open('admin/invoice_items/manage', ['id' => 'invoice_item_form']); ?>
+            <?php echo form_open('admin/invoice_items/manage', ['id' => 'invoice_item_form', 'enctype' => 'multipart/form-data']); ?>
             <?php echo form_hidden('itemid'); ?>
             <div class="modal-body">
                 <div class="row">
@@ -65,6 +65,13 @@
                     <?php echo render_custom_fields('items'); ?>
                 </div>
                 <?php echo render_select('group_id', $items_groups, ['id', 'name'], 'item_group'); ?>
+                <div id="contact-item-image" class="form-group">
+                    <label for="item_image"
+                        class="item_image"><?php echo _l('invoice_item_image'); ?></label>
+                    <input type="file" name="item_image" class="form-control" id="item_image">
+                </div>
+                <img style="max-width:400px;" id="item_image_img" src="" data="<?php echo base_url('');?>uploads/proposals/item_"><br>
+                <a id="item_image_delete_link" data="<?php echo admin_url('');?>invoice_items/delete_proposal_item_image/"> Remover Imagem <i class="fa fa-remove tw-mt-1"></i></a>          
                 <?php hooks()->do_action('before_invoice_item_modal_form_close'); ?>
             </div>
         </div>
@@ -157,6 +164,10 @@ function init_item_js() {
 
         var $itemModal = $('#sales_item_modal');
         $('input[name="itemid"]').val('');
+        $("#contact-item-image").removeClass('hide');
+        $("#item_image_img").removeAttr('src');
+        $("#item_image_delete_link").addClass('hide');
+        $("#item_image_delete_link").removeAttr('href');
         $itemModal.find('input').not('input[type="hidden"]').val('');
         $itemModal.find('textarea').val('');
         $itemModal.find('select').selectpicker('val', '').selectpicker('refresh');
@@ -173,6 +184,19 @@ function init_item_js() {
             $('input[name="itemid"]').val(id);
 
             requestGetJSON('invoice_items/get_item_by_id/' + id).done(function (response) {
+                var src_img = $("#item_image_img").attr('data') + response.itemid + '/' + response.item_image;
+                var src_delete_link = $("#item_image_delete_link").attr('data') + response.itemid;
+                if(response.item_image != null){
+                    $("#contact-item-image").addClass('hide');
+                    $("#item_image_img").attr('src', src_img);
+                    $("#item_image_delete_link").removeClass('hide');
+                    $("#item_image_delete_link").attr('href', src_delete_link);
+                }else{
+                    $("#contact-item-image").removeClass('hide');
+                    $("#item_image_img").removeAttr('src');
+                    $("#item_image_delete_link").addClass('hide');
+                    $("#item_image_delete_link").removeAttr('href');
+                }
                 $itemModal.find('input[name="description"]').val(response.description);
                 $itemModal.find('textarea[name="long_description"]').val(response.long_description.replace(/(<|<)br\s*\/*(>|>)/g, " "));
                 $itemModal.find('input[name="rate"]').val(response.rate);
@@ -213,6 +237,6 @@ function validate_item_form(){
         rate: {
             required: true,
         }
-    }, manage_invoice_items);
+    });
 }
 </script>

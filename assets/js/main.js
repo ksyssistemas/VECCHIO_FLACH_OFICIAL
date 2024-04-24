@@ -7090,6 +7090,8 @@ function add_item_to_preview(id) {
   ) {
     clear_item_preview_values();
 
+    $('.main input[name="item_image"]').val(response.item_image);
+    $('.main input[name="original_id"]').val(response.itemid);
     $('.main textarea[name="description"]').val(response.description);
     $('.main textarea[name="long_description"]').val(
       response.long_description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, " ")
@@ -7283,6 +7285,21 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
       '<input type="hidden" class="order" name="newitems[' +
       item_key +
       '][order]">';
+
+      table_row +=
+      '<input type="hidden" name="newitems[' +
+      item_key +
+      '][original_id]" value="' +
+      data.original_id +
+      '">';
+
+      table_row +=
+      '<input type="hidden" name="newitems[' +
+      item_key +
+      '][item_image]" value="' +
+      data.item_image +
+      '">';
+
 
     table_row += "</td>";
 
@@ -7631,6 +7648,8 @@ function get_item_preview_values() {
   response.taxname = $(".main select.tax").selectpicker("val");
   response.rate = $('.main input[name="rate"]').val();
   response.unit = $('.main input[name="unit"]').val();
+  response.item_image = $('.main input[name="item_image"]').val();
+  response.original_id = $('.main input[name="original_id"]').val();
   return response;
 }
 

@@ -64,6 +64,8 @@
                 <tr class="main">
                     <td></td>
                     <td>
+                        <input type="hidden" name="item_image">
+                        <input type="hidden" name="original_id">
                         <textarea name="description" rows="4" class="form-control"
                             placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
                     </td>
@@ -142,6 +144,8 @@
                              $amount = app_format_number($amount);
                              // order input
                              $table_row .= '<input type="hidden" class="order" name="' . $items_indicator . '[' . $i . '][order]">';
+                             $table_row .= '<input type="hidden" name="' . $items_indicator . '[' . $i . '][item_image]" value="' . $item['item_image'] .'">';
+                             $table_row .= '<input type="hidden" name="' . $items_indicator . '[' . $i . '][original_id]" value="' . $item['original_id'] .'">';
                              $table_row .= '</td>';
                              $table_row .= '<td class="bold description"><textarea name="' . $items_indicator . '[' . $i . '][description]" class="form-control" rows="5">' . clear_textarea_breaks($item['description']) . '</textarea></td>';
                              $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';

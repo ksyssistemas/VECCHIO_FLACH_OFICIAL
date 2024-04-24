@@ -173,23 +173,49 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php $fc_rel_id = (isset($proposal) ? $proposal->id : false); ?>
-                                <?php echo render_custom_fields('proposal', $fc_rel_id); ?>
-                                <div class="form-group no-mbot">
-                                    <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
-                                        <?php echo _l('tags'); ?></label>
-                                    <input type="text" class="tagsinput" id="tags" name="tags"
-                                        value="<?php echo(isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''); ?>"
-                                        data-role="tagsinput">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php $fc_rel_id = (isset($proposal) ? $proposal->id : false); ?>
+                                        <?php echo render_custom_fields('proposal', $fc_rel_id); ?>
+                                        <div class="form-group no-mbot">
+                                            <label for="tags" class="control-label"><i class="fa fa-tag" aria-hidden="true"></i>
+                                                <?php echo _l('tags'); ?></label>
+                                            <input type="text" class="tagsinput" id="tags" name="tags"
+                                                value="<?php echo(isset($proposal) ? prep_tags_input(get_tags_in($proposal->id, 'proposal')) : ''); ?>"
+                                                data-role="tagsinput">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mtop10 no-mbot">
+                                            <p><?php echo _l('proposal_allow_comments'); ?></p>
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" id="allow_comments" class="onoffswitch-checkbox" <?php if ((isset($proposal) && $proposal->allow_comments == 1) || !isset($proposal)) {
+                                            echo 'checked';
+                                        }; ?> value="on" name="allow_comments">
+                                                <label class="onoffswitch-label" for="allow_comments" data-toggle="tooltip"
+                                                    title="<?php echo _l('proposal_allow_comments_help'); ?>"></label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group mtop10 no-mbot">
-                                    <p><?php echo _l('proposal_allow_comments'); ?></p>
-                                    <div class="onoffswitch">
-                                        <input type="checkbox" id="allow_comments" class="onoffswitch-checkbox" <?php if ((isset($proposal) && $proposal->allow_comments == 1) || !isset($proposal)) {
-                                      echo 'checked';
-                                  }; ?> value="on" name="allow_comments">
-                                        <label class="onoffswitch-label" for="allow_comments" data-toggle="tooltip"
-                                            title="<?php echo _l('proposal_allow_comments_help'); ?>"></label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php $proposal_types = array(
+                                            "0" => array(
+                                                "proposal_type_id" => "Sutil Máquinas",
+                                                "proposal_type" => "Sutil Máquinas",
+                                            ), 
+                                            "1" => array(
+                                                "proposal_type_id" => "Sutil Cargo",
+                                                "proposal_type" => "Sutil Cargo",
+                                            )
+                                        ); ?>
+                                        <?php $selected  = (isset($proposal) ? $proposal->proposal_type : ''); ?>
+                                        <?php echo render_select('proposal_type', $proposal_types, ['proposal_type_id', 'proposal_type'], 'proposal_type', $selected); ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php $value = (isset($proposal) ? $proposal->payment_terms : ''); ?>
+                                        <?php echo render_input('payment_terms', 'proposal_payment_terms', $value); ?>
                                     </div>
                                 </div>
                             </div>
@@ -251,6 +277,26 @@
                                     <div class="col-md-6">
                                         <?php $value = (isset($proposal) ? $proposal->phone : ''); ?>
                                         <?php echo render_input('phone', 'proposal_phone', $value); ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php $shipping_types = array(
+                                            "0" => array(
+                                                "shipping_type_id" => "FOB",
+                                                "shipping_type" => "FOB",
+                                            ), 
+                                            "1" => array(
+                                                "shipping_type_id" => "CIF",
+                                                "shipping_type" => "CIF",
+                                            )
+                                        ); ?>
+                                        <?php $selected  = (isset($proposal) ? $proposal->shipping_type : ''); ?>
+                                        <?php echo render_select('shipping_type', $shipping_types, ['shipping_type_id', 'shipping_type'], 'proposal_shipping_type', $selected); ?>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php $value = (isset($proposal) ? $proposal->delivery_forecast : ''); ?>
+                                        <?php echo render_input('delivery_forecast', 'proposal_delivery_forecast', $value); ?>
                                     </div>
                                 </div>
                             </div>

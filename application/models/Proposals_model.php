@@ -220,6 +220,8 @@ class Proposals_model extends App_Model
         $data  = $hook['data'];
         $items = $hook['items'];
 
+        unset($data['item_image']);
+        unset($data['original_id']);
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
 
@@ -361,7 +363,8 @@ class Proposals_model extends App_Model
         }
 
         unset($data['removed_items']);
-
+        unset($data['item_image']);
+        unset($data['original_id']);
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'proposals', $data);
         if ($this->db->affected_rows() > 0) {

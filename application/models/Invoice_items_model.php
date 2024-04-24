@@ -87,7 +87,7 @@ class Invoice_items_model extends App_Model
         $this->db->select($rateCurrencyColumns . '' . db_prefix() . 'items.id as itemid,rate,
             t1.taxrate as taxrate,t1.id as taxid,t1.name as taxname,
             t2.taxrate as taxrate_2,t2.id as taxid_2,t2.name as taxname_2,
-            description,long_description,group_id,' . db_prefix() . 'items_groups.name as group_name,unit');
+            description,long_description,group_id,item_image,' . db_prefix() . 'items_groups.name as group_name,unit');
         $this->db->from(db_prefix() . 'items');
         $this->db->join('' . db_prefix() . 'taxes t1', 't1.id = ' . db_prefix() . 'items.tax', 'left');
         $this->db->join('' . db_prefix() . 'taxes t2', 't2.id = ' . db_prefix() . 'items.tax2', 'left');
@@ -288,6 +288,12 @@ class Invoice_items_model extends App_Model
 
             hooks()->do_action('item_deleted', $id);
 
+            if ($this->db->affected_rows() > 0) {
+                if (is_dir(get_upload_path_by_type('proposal'). 'item_'.$id . '/')) {
+                    $delete_dir = delete_dir(get_upload_path_by_type('proposal'). 'item_'.$id . '/');
+                }
+            }
+
             return true;
         }
 
@@ -343,4 +349,21 @@ class Invoice_items_model extends App_Model
 
         return false;
     }
+
+    public function delete_proposal_item_image($id)
+    {
+        if (is_dir(get_upload_path_by_type('proposal'). 'item_'.$id . '/')) {
+            $delete_dir = delete_dir(get_upload_path_by_type('proposal'). 'item_'.$id . '/');
+        }
+        $this->db->where('id', $id);
+        $update_bd = $this->db->update(db_prefix() . 'items', [
+            'item_image' => null,
+        ]);
+        if($delete_dir && $update_bd){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

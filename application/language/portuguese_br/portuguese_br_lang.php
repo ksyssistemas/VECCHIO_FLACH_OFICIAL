@@ -215,6 +215,9 @@ $lang['invoice_item_add_edit_description'] = 'Descrição';
 $lang['invoice_item_add_edit_rate']        = 'Tarifa';
 $lang['invoice_item_edit_heading']         = 'Editar o Item';
 $lang['invoice_item_add_heading']          = 'Adicionar Novo Item';
+$lang['invoice_item_image']                = 'Imagem do Item';
+$lang['invoice_item_deleted']              = 'Imagem adicionada com sucesso';
+$lang['invoice_item_deleted_not_deleted']  = 'Imagem não adiconada, tente novamente';
 
 # Invoices
 $lang['invoices']                       = 'Faturas';
@@ -1750,6 +1753,10 @@ $lang['proposal_converted_to_estimate_success'] = 'Proposta convertida para orç
 $lang['proposal_converted_to_invoice_success']  = 'Proposta convertida em fatura com sucesso';
 $lang['proposal_converted_to_estimate_fail']    = 'Falha para converter a Proposta em orçamento';
 $lang['proposal_converted_to_invoice_fail']     = 'Falha para converter a proposta em fatura';
+$lang['proposal_type']                          = 'Tipo de Proposta';
+$lang['proposal_payment_terms']                 = 'Condição de pagamento';
+$lang['proposal_shipping_type']                 = 'Tipo de Frete';
+$lang['proposal_delivery_forecast']             = 'Previsão de Entrega';
 
 # Proposals - view proposal template
 $lang['proposal_total_info']   = 'Total %s';

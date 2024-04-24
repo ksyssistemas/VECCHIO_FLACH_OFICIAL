@@ -56,9 +56,12 @@ class Invoice_items extends AdminController
                     $success = false;
                     $message = '';
                     if ($id) {
+                        handle_proposal_item_image_upload($id);
                         $success = true;
                         $message = _l('added_successfully', _l('sales_item'));
+                        set_alert('success', $message);
                     }
+                    redirect(admin_url('invoice_items'));
                     echo json_encode([
                         'success' => $success,
                         'message' => $message,
@@ -71,10 +74,14 @@ class Invoice_items extends AdminController
                         die;
                     }
                     $success = $this->invoice_items_model->edit($data);
-                    $message = '';
-                    if ($success) {
+                    $message = '';        
+                    if (handle_proposal_item_image_upload($data['itemid']) || $success) {
                         $message = _l('updated_successfully', _l('sales_item'));
+                        set_alert('success', $message);
+                    }else{
+                        $success = false;
                     }
+                    redirect(admin_url('invoice_items'));
                     echo json_encode([
                         'success' => $success,
                         'message' => $message,
@@ -240,6 +247,16 @@ class Invoice_items extends AdminController
         }
 
         set_alert('warning', _l('item_copy_fail'));
+        return redirect(admin_url('invoice_items'));
+    }
+
+    public function delete_proposal_item_image($item_id)
+    {
+        if($this->invoice_items_model->delete_proposal_item_image($item_id)){
+            set_alert('success', _l('invoice_item_deleted'));
+        }else{
+            set_alert('warning', _l('invoice_item_deleted_not_deleted'));
+        }
         return redirect(admin_url('invoice_items'));
     }
 }
