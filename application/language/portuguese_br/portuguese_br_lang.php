@@ -2011,6 +2011,27 @@ $lang['settings_group_misc']                                            = 'Varia
 $lang['show_projects_on_calendar']                                      = 'Projetos';
 $lang['settings_media_max_file_size_upload']                            = 'Tamanho máx permitido para upload de arquivo de Mídia (MB)';
 $lang['settings_client_staff_add_edit_delete_task_comments_first_hour'] = 'Permitir ao cliente/equipe adicionar/editar comentários de tarefas, apenas na primeira hora? (Não aplicado aos administradores)';
+$lang['settings_integrations']                                          = 'Integrações';
+$lang['settings_connection_btv']                                        = 'Conexão Bemtevi';
+$lang['settings_connection_logosystem']                                 = 'Conexão LogoSystem';
+$lang['settings_integrado_btv']                                         = 'Ativar integração com o Bemtevi?';
+$lang['settings_integrado_logosystem']                                  = 'Ativar integração com o LogoSystem?';
+$lang['settings_integration_url_crm_logosystem']                        = 'URL Bemtevi para LogoSystem';
+$lang['settings_integration_url_logosystem']                            = 'URL LogoSystem';
+$lang['settings_integration_token_logosystem']                          = 'Token LogoSystem';
+$lang['settings_integration_btv_url_prod']                              = 'URL Produção';
+$lang['settings_integration_btv_url_teste']                             = 'URL Teste';
+$lang['settings_integration_btv_url']                                   = 'URL';
+$lang['settings_integration_btv_url_hd']                                = 'URL Helpdesk';
+$lang['settings_integration_database']                                  = 'Base de dados';
+$lang['settings_integration_database_hd']                               = 'Base de dados Helpdesk';
+$lang['settings_integration_database_crm']                              = 'Base de dados CRM';
+$lang['settings_integration_btv_base_dados_ip']                         = 'IP';
+$lang['settings_integration_btv_base_dados_user']                       = 'Usuário';
+$lang['settings_integration_btv_base_dados_password']                   = 'Senha';
+$lang['settings_integration_btv_base_dados_db']                         = 'Nome do Banco';
+$lang['settings_integration_btv_base_dados_port']                       = 'Porta';
+
 
 # Email templates
 $lang['email_template_only_domain_email'] = 'Apenas e-mail de domínio';

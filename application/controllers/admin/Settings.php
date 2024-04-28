@@ -31,6 +31,10 @@ class Settings extends AdminController
             $post_data = $this->input->post();
             $tmpData   = $this->input->post(null, false);
 
+            if (isset($post_data['settings']['integration_btv_base_dados_password']) && $post_data['settings']['integration_btv_base_dados_password'] == "") {
+                unset($post_data['settings']['integration_btv_base_dados_password']);
+            }
+
             if (isset($post_data['settings']['email_header'])) {
                 $post_data['settings']['email_header'] = $tmpData['settings']['email_header'];
             }

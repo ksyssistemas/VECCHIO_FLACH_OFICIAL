@@ -33,6 +33,26 @@ function integracao_logosystem($client_area = false)
     return false;
     
 }
+function get_integration_variables(){
+    $integration_variables = array();
+    $integration_variables["baseDados"]["ip"] = get_option('integration_btv_base_dados_ip');
+    $integration_variables["baseDados"]["user"] = get_option('integration_btv_base_dados_user');
+    $integration_variables["baseDados"]["password"] = get_option('integration_btv_base_dados_password');
+    $integration_variables["baseDados"]["db"] = get_option('integration_btv_base_dados_db');
+    $integration_variables["baseDados"]["port"] = get_option('integration_btv_base_dados_port');
+
+    $integration_variables["url"] = get_option('integration_btv_url');
+    /*$integration_variables["url-prod"] = get_option('integration_btv_url_prod');
+    $integration_variables["url-teste"] = get_option('integration_btv_url_teste');
+    $integration_variables["url_hd"] = get_option('integration_btv_url_hd');*/
+
+    $integration_variables["url_crm_logosystem"] = get_option('integration_url_crm_logosystem');
+    $integration_variables["url_logosystem"] = get_option('integration_url_logosystem');
+    $integration_variables["token_logosystem"] = get_option('integration_token_logosystem');
+
+    return $integration_variables;
+}
+
 
 function requestCurl($url, $parametros, $method = 'POST') {
 
@@ -51,7 +71,7 @@ function requestCurl($url, $parametros, $method = 'POST') {
 }
 
 function adicionar_cliente_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
 
     //verificar se é CPF ou CNPJ
     if(strlen($data['cpfcnpj']) > 11){
@@ -60,9 +80,9 @@ function adicionar_cliente_btv($data){
         $data['pessoafisica'] = 1;
     }
 
-    if(file_exists($file)){
+    if(integracao_btv()){
 
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Cliente.criar_cliente",
                 "bd" => [
@@ -91,13 +111,12 @@ function adicionar_cliente_btv($data){
 }
 
 function adicionar_celular_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
+
+    if(integracao_btv()){
 
 
-    if(file_exists($file)){
-
-
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Cliente.adicionar_celular",
                 "bd" => [
@@ -121,13 +140,13 @@ function adicionar_celular_btv($data){
 }
 
 function adicionar_endereco_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
 
 
-    if(file_exists($file)){
+    if(integracao_btv()){
 
 
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Cliente.adicionar_endereco_cliente",
                 "bd" => [
@@ -166,13 +185,13 @@ function adicionar_endereco_btv($data){
 
 
 function retornar_codigo_estado_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
 
 
-    if(file_exists($file)){
+    if(integracao_btv()){
 
 
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Endereco.retornar_estado_por_nome",
                 "bd" => [
@@ -202,13 +221,12 @@ function retornar_codigo_estado_btv($data){
 
 
 function retornar_codigo_cidade_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
+
+    if(integracao_btv()){
 
 
-    if(file_exists($file)){
-
-
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Endereco.retornar_cidade_por_nome",
                 "bd" => [
@@ -235,17 +253,11 @@ function retornar_codigo_cidade_btv($data){
 }
 
 function criar_suporte_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
+    if(integracao_btv()){
 
 
-
-
-    if(file_exists($file)){
-
-
-
-
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Suporte.criar_suporte",
                 "bd" => [
@@ -275,17 +287,10 @@ function criar_suporte_btv($data){
 }
 
 function retornar_usuarios_pelo_nome_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
+    if(integracao_btv()){
 
-
-
-
-    if(file_exists($file)){
-
-
-
-
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Usuario.retornar_usuarios_pelo_nome",
                 "bd" => [
@@ -309,13 +314,10 @@ function retornar_usuarios_pelo_nome_btv($data){
 
 
 function adicionar_email_btv($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
+    if(integracao_btv()){
 
-
-    if(file_exists($file)){
-
-
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Cliente.adicionar_email",
                 "bd" => [
@@ -339,7 +341,7 @@ function adicionar_email_btv($data){
 }
 
 function adicionar_cliente_logosystem($data){
-    $file = (APPPATH."configConnectionBTV.json");
+    
 
     //verificar se é CPF ou CNPJ
     if(strlen($data['cpf_cnpj']) > 11){
@@ -348,9 +350,9 @@ function adicionar_cliente_logosystem($data){
         $data['inscricao_estadual'] = "";
     }
 
-    if(file_exists($file)){
+    if(integracao_logosystem()){
 
-        $conn = json_decode(file_get_contents($file),true);
+        $conn = get_integration_variables();
         $param = [
             "funcao"=>"Logosystem.criar_cliente",
                 "bd" => [

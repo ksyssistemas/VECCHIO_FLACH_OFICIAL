@@ -259,4 +259,11 @@ function app_init_settings_tabs()
         'position' => 95,
         'icon'     => 'fa-solid fa-gears',
     ]);
+
+    $CI->app_tabs->add_settings_tab('integrations', [
+        'name'     => _l('settings_integrations'),
+        'view'     => 'admin/settings/includes/integrations',
+        'position' => 100,
+        'icon'     => 'fa-solid fa-exchange',
+    ]);
 }
