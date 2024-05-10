@@ -40,7 +40,7 @@
 
                 <?php hooks()->do_action('before_items_page_content'); ?>
 
-                <?php if (has_permission('items', '', 'create')) { ?>
+                <?php if (has_permission('items', '', 'create') && !get_option('integrado_logosystem')) { ?>
                 <div class="_buttons tw-mb-2 sm:tw-mb-4 tw-inline-block tw-w-full">
                     <a href="#" class="btn btn-primary pull-left" data-toggle="modal" data-target="#sales_item_modal">
                         <i class="fa-regular fa-plus tw-mr-1"></i>
@@ -68,7 +68,15 @@
     if (has_permission('items', '', 'delete')) {
         $table_data[] = '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="invoice-items"><label></label></div>';
     }
-
+    if(get_option('integrado_logosystem')){
+        $table_data = array_merge($table_data, [
+        _l('invoice_items_list_description'),
+        _l('invoice_item_color'),
+        _l('invoice_item_size'),
+        _l('invoice_item_qtd_estoque'),
+        _l('invoice_items_list_rate'),
+        _l('unit'), ]);
+    }else{
     $table_data = array_merge($table_data, [
       _l('invoice_items_list_description'),
       _l('invoice_item_long_description'),
@@ -77,7 +85,7 @@
       _l('tax_2'),
       _l('unit'),
       _l('item_group_name'), ]);
-
+    }
     $cf = get_custom_fields('items');
     foreach ($cf as $custom_field) {
         array_push($table_data, [

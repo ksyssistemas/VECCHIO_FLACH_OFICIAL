@@ -43,6 +43,8 @@ class Cron_model extends App_Model
         parent::__construct();
         $this->load->model('emails_model');
         $this->load->model('staff_model');
+        $this->load->model('invoice_items_model');
+        $this->load->helper('bemtevi_api');
 
         register_shutdown_function(function () {
             if ($this->hasTimeoutOccurred() && $this->currentImapMessage) {
@@ -92,6 +94,7 @@ class Cron_model extends App_Model
             $this->delete_twocheckout_logs();
             $this->stop_task_timers();
             $this->non_billed_tasks_notification();
+            $this->atualizar_produtos();
 
             /**
              * Finally send any emails in the email queue - if enabled and any
@@ -1956,5 +1959,98 @@ class Cron_model extends App_Model
         }
 
         return startsWith($lastError['message'], 'Maximum execution time');
+    }
+
+    public function atualizar_produtos($atualizar_todos_items = false){
+        $ultima_atualizacao_produtos = get_option('last_updated_items');
+        if(integracao_logosystem()){
+            $produtos = atualizar_produtos_logosystem();
+            foreach($produtos as $produto){
+                $ultima_alteracao_produto = strtotime($produto->ultima_alteracao);
+                foreach($produto->variantes as $variante){
+                    foreach($variante->tamanhos as $tamanho){
+                        $this->db->where('codigo_logosystem', $produto->codigo);
+                        $this->db->where('cor_logosystem', $variante->cor_nome);
+                        $this->db->where('tamanho_logosystem', $tamanho->tamanho);
+                        $item = $this->db->get(db_prefix() . 'items')->row_array();
+            
+                        $data = array();
+                        if(is_null($item)){
+                            $data['codigo_logosystem'] = $produto->codigo;
+                            $data['description'] = $produto->descricao;
+                            $data['shortened_description'] = $produto->descricao_reduzida;
+                            $data['short_description'] = $produto->descricao_curta;
+                            $data['long_description'] = $produto->descricao_longa;
+                            $data['rate'] = "0";
+                            $data['unit'] = $produto->unidade_medida;
+                            $data['comments'] = $produto->observacoes;
+                            $data['cor_logosystem'] = $variante->cor_nome;
+                            $data['tamanho_logosystem'] = $tamanho->tamanho;
+                            $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                            $data['active'] = $produto->ativo;
+                            $imagens = atualizar_imagens_logosystem($produto->codigo);
+                            foreach($imagens as $imagem){
+                                if(isset($imagem)){
+                                    $data['item_image'] = $imagem->imagem;
+                                    $data['format_image'] = $imagem->formato;
+                                }
+                            }
+                            $id      = $this->invoice_items_model->add($data);
+                        }else{
+                            if($ultima_alteracao_produto > $ultima_atualizacao_produtos || $atualizar_todos_items){
+                                $data['codigo_logosystem'] = $produto->codigo;
+                                $data['description'] = $produto->descricao;
+                                $data['shortened_description'] = $produto->descricao_reduzida;
+                                $data['short_description'] = $produto->descricao_curta;
+                                $data['long_description'] = $produto->descricao_longa;
+                                $data['rate'] = "0";
+                                $data['unit'] = $produto->unidade_medida;
+                                $data['comments'] = $produto->observacoes;
+                                $data['cor_logosystem'] = $variante->cor_nome;
+                                $data['tamanho_logosystem'] = $tamanho->tamanho;
+                                $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                                $data['active'] = $produto->ativo;
+                                $imagens = atualizar_imagens_logosystem($produto->codigo);
+                                foreach($imagens as $imagem){
+                                    if(isset($imagem)){
+                                        $data['item_image'] = $imagem->imagem;
+                                        $data['format_image'] = $imagem->formato;
+                                    }
+                                }
+                            }else{
+                                $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                            }
+                            $data['itemid'] = $item['id'];
+                            $success = $this->invoice_items_model->edit($data);
+                        }
+                    }
+                }
+            }
+
+            $tabelaspreco = atualizar_precos_logosystem($atualizar_todos_items = false);
+            foreach($tabelaspreco as $tabelapreco){
+                $ultima_alteracao_tabela = strtotime($tabelapreco->ultima_alteracao);
+                if($ultima_alteracao_tabela > $ultima_atualizacao_produtos || $atualizar_todos_items){
+                    foreach($tabelapreco->produtos as $produto){
+                        foreach($produto->variantes as $variante){
+                            foreach($variante->grade as $grade){
+                                $this->db->where('codigo_logosystem', $produto->codigo);
+                                $this->db->where('cor_logosystem', $variante->cor_nome);
+                                $this->db->where('tamanho_logosystem', $grade->tamanho);
+                                $item = $this->db->get(db_prefix() . 'items')->row_array();
+                                $data = array();        
+                                if(! is_null($item)){
+                                    $data['itemid'] = $item['id'];
+                                    $data['rate'] = $grade->preco;
+                                    $success = $this->invoice_items_model->edit($data);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        update_option("last_updated_items", strtotime("-1 day"));
     }
 }

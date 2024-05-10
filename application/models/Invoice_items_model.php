@@ -87,7 +87,9 @@ class Invoice_items_model extends App_Model
         $this->db->select($rateCurrencyColumns . '' . db_prefix() . 'items.id as itemid,rate,
             t1.taxrate as taxrate,t1.id as taxid,t1.name as taxname,
             t2.taxrate as taxrate_2,t2.id as taxid_2,t2.name as taxname_2,
-            description,long_description,group_id,item_image,' . db_prefix() . 'items_groups.name as group_name,unit');
+            description,long_description,group_id,item_image,format_image,
+            short_description,shortened_description,comments,cor_logosystem,tamanho_logosystem,qtd_estoque_logosystem,
+            ' . db_prefix() . 'items_groups.name as group_name,unit');
         $this->db->from(db_prefix() . 'items');
         $this->db->join('' . db_prefix() . 'taxes t1', 't1.id = ' . db_prefix() . 'items.tax', 'left');
         $this->db->join('' . db_prefix() . 'taxes t2', 't2.id = ' . db_prefix() . 'items.tax2', 'left');

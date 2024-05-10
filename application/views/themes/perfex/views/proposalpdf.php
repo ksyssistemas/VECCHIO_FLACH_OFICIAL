@@ -503,7 +503,7 @@ $html = '<p>CONDIÇÕES DE VENDA:</p>
         <li>Trava de Porta;</li>
         <li>Rodas de Ferro.</li>
     </ul>
-    <p>TENS OPCIONAIS A PROPOSTA:</p>
+    <p>ITENS OPCIONAIS A PROPOSTA:</p>
     <ul>
         <li>Kit Hidráulico Cavalo Mecânico (não incluso a parametrização de cambio) R$ 18.000,00;</li>
         <li>13 Pneus R$ 26.800,00 ( para modelo 3 Eixos);</li>
@@ -525,7 +525,7 @@ $html = '<p>CONDIÇÕES DE VENDA:</p>
         <li>Implemento homologado junto ao Inmetro e Denatran;</li>
         <li>Piso Móvel Marca Hallco.</li>
     </ul>
-    <p>MPOSTOS E TAXAS:</p>
+    <p>IMPOSTOS E TAXAS:</p>
     <ul>
         <li> Todos os impostos e taxas incidentes sobre a venda deste equipamento estão inclusos no preço e qualquer alteração
         que possa ocorrer até a data do efetivo faturamento, poderá ser repassada aos preços. Imposto conforme legislação

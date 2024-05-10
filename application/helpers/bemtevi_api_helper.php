@@ -70,6 +70,26 @@ function requestCurl($url, $parametros, $method = 'POST') {
     return $retorno;
 }
 
+function requestCurlLogosystem($url, $parametros, $token, $method = 'GET') {
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    "Content-Type: application/json",
+    "Authorization: bearer $token"
+    ));
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response;
+}
+
+
 function adicionar_cliente_btv($data){
     
 
@@ -388,4 +408,52 @@ function adicionar_cliente_logosystem($data){
         return $response;
     } 
     return false;
+}
+
+function atualizar_produtos_logosystem(){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+
+        $response = requestCurlLogosystem($conn['url_logosystem']."produtos","",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
+}
+
+function atualizar_precos_logosystem(){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+
+        $response = requestCurlLogosystem($conn['url_logosystem']."tabelapreco","",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
+}
+
+function atualizar_imagens_logosystem($codigo){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+
+        $response = requestCurlLogosystem($conn['url_logosystem']."produtos/".$codigo."/imagens","",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
 }

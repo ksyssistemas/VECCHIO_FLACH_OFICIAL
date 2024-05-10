@@ -1224,6 +1224,12 @@ $lang['acs_contract_types'] = 'Tipos de Contrato';
 # Version 1.0.4
 # Invoice Items
 $lang['invoice_item_long_description'] = 'Descrição Longa';
+$lang['invoice_item_short_description'] = 'Descrição Curta';
+$lang['invoice_item_shortened_description'] = 'Descrição Reduzida';
+$lang['invoice_item_comments'] = 'Observações';
+$lang['invoice_item_color'] = 'Cor';
+$lang['invoice_item_size'] = 'Tamanho';
+$lang['invoice_item_qtd_estoque'] = 'Quantidade em Estoque';
 # Customers
 $lang['clients_list_phone']                = 'Telefone';
 $lang['client_expenses_tab']               = 'Despesas';

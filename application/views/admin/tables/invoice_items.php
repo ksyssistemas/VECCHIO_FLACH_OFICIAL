@@ -8,16 +8,30 @@ if (has_permission('items', '', 'delete')) {
     $aColumns[] = '1';
 }
 
-$aColumns = array_merge($aColumns, [
-    'description',
-    'long_description',
-    db_prefix() . 'items.rate as rate',
-    't1.taxrate as taxrate_1',
-    't2.taxrate as taxrate_2',
-    'unit',
-    db_prefix() . 'items_groups.name as group_name',
-    ]);
-
+if(get_option('integrado_logosystem')){
+    $aColumns = array_merge($aColumns, [
+        'description',
+        'long_description',
+        'cor_logosystem',
+        'tamanho_logosystem',
+        'qtd_estoque_logosystem',
+        db_prefix() . 'items.rate as rate',
+        't1.taxrate as taxrate_1',
+        't2.taxrate as taxrate_2',
+        'unit',
+        db_prefix() . 'items_groups.name as group_name',
+        ]);
+}else{
+    $aColumns = array_merge($aColumns, [
+        'description',
+        'long_description',
+        db_prefix() . 'items.rate as rate',
+        't1.taxrate as taxrate_1',
+        't2.taxrate as taxrate_2',
+        'unit',
+        db_prefix() . 'items_groups.name as group_name',
+        ]);
+}
 $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'items';
 
@@ -63,20 +77,38 @@ foreach ($rResult as $aRow) {
     $descriptionOutput = '<a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="' . $aRow['id'] . '">' . $aRow['description'] . '</a>';
     $descriptionOutput .= '<div class="row-options">';
 
-    if (has_permission('items', '', 'edit')) {
-        $descriptionOutput .= '<a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="' . $aRow['id'] . '">' . _l('edit') . '</a>';
-    }
-
-    if (has_permission('items', '', 'delete')) {
-        $descriptionOutput .= ' | <a href="' . admin_url('invoice_items/delete/' . $aRow['id']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
-    }
-
-    if (has_permission('items', '', 'create')) {
-        $descriptionOutput .= ' | <a href="' . admin_url('invoice_items/copy/' . $aRow['id']) . '" class=" _edit_item">' . _l('copy') . '</a>';
+    if(!get_option('integrado_logosystem')){
+        if (has_permission('items', '', 'edit')) {
+            $descriptionOutput .= '<a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="' . $aRow['id'] . '">' . _l('edit') . '</a>';
+        }
+    
+        if (has_permission('items', '', 'delete')) {
+            $descriptionOutput .= ' | <a href="' . admin_url('invoice_items/delete/' . $aRow['id']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
+        }
+    
+        if (has_permission('items', '', 'create')) {
+            $descriptionOutput .= ' | <a href="' . admin_url('invoice_items/copy/' . $aRow['id']) . '" class=" _edit_item">' . _l('copy') . '</a>';
+        }
     }
 
     $descriptionOutput .= '</div>';
 
+    if(get_option('integrado_logosystem')){
+        $row[] = $descriptionOutput;
+
+        $row[] = $aRow['cor_logosystem'];
+
+        $row[] = $aRow['tamanho_logosystem'];
+
+        $row[] = $aRow['qtd_estoque_logosystem'];
+
+        $row[] = app_format_money($aRow['rate'], get_base_currency());
+        
+        $row[] = $aRow['unit'];
+
+       //$row[] = $aRow['group_name'];
+
+    }else{
     $row[] = $descriptionOutput;
 
     $row[] = $aRow['long_description'];
@@ -91,7 +123,7 @@ foreach ($rResult as $aRow) {
     $row[]             = $aRow['unit'];
 
     $row[] = $aRow['group_name'];
-
+    }
     // Custom fields add values
     foreach ($customFieldsColumns as $customFieldColumn) {
         $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);

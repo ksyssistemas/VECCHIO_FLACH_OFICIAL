@@ -10,7 +10,102 @@ class Invoice_items extends AdminController
     {
         parent::__construct();
         $this->load->model('invoice_items_model');
+        $this->load->helper('bemtevi_api');
     }
+
+    public function atualizar_produtos($atualizar_todos_items = false){
+        $ultima_atualizacao_produtos = get_option('last_updated_items');
+        if(integracao_logosystem()){
+            $produtos = atualizar_produtos_logosystem();
+            foreach($produtos as $produto){
+                $ultima_alteracao_produto = strtotime($produto->ultima_alteracao);
+                foreach($produto->variantes as $variante){
+                    foreach($variante->tamanhos as $tamanho){
+                        $this->db->where('codigo_logosystem', $produto->codigo);
+                        $this->db->where('cor_logosystem', $variante->cor_nome);
+                        $this->db->where('tamanho_logosystem', $tamanho->tamanho);
+                        $item = $this->db->get(db_prefix() . 'items')->row_array();
+            
+                        $data = array();
+                        if(is_null($item)){
+                            $data['codigo_logosystem'] = $produto->codigo;
+                            $data['description'] = $produto->descricao;
+                            $data['shortened_description'] = $produto->descricao_reduzida;
+                            $data['short_description'] = $produto->descricao_curta;
+                            $data['long_description'] = $produto->descricao_longa;
+                            $data['rate'] = "0";
+                            $data['unit'] = $produto->unidade_medida;
+                            $data['comments'] = $produto->observacoes;
+                            $data['cor_logosystem'] = $variante->cor_nome;
+                            $data['tamanho_logosystem'] = $tamanho->tamanho;
+                            $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                            $data['active'] = $produto->ativo;
+                            $imagens = atualizar_imagens_logosystem($produto->codigo);
+                            foreach($imagens as $imagem){
+                                if(isset($imagem)){
+                                    $data['item_image'] = $imagem->imagem;
+                                    $data['format_image'] = $imagem->formato;
+                                }
+                            }
+                            $id      = $this->invoice_items_model->add($data);
+                        }else{
+                            if($ultima_alteracao_produto > $ultima_atualizacao_produtos || $atualizar_todos_items){
+                                $data['codigo_logosystem'] = $produto->codigo;
+                                $data['description'] = $produto->descricao;
+                                $data['shortened_description'] = $produto->descricao_reduzida;
+                                $data['short_description'] = $produto->descricao_curta;
+                                $data['long_description'] = $produto->descricao_longa;
+                                $data['rate'] = "0";
+                                $data['unit'] = $produto->unidade_medida;
+                                $data['comments'] = $produto->observacoes;
+                                $data['cor_logosystem'] = $variante->cor_nome;
+                                $data['tamanho_logosystem'] = $tamanho->tamanho;
+                                $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                                $data['active'] = $produto->ativo;
+                                $imagens = atualizar_imagens_logosystem($produto->codigo);
+                                foreach($imagens as $imagem){
+                                    if(isset($imagem)){
+                                        $data['item_image'] = $imagem->imagem;
+                                        $data['format_image'] = $imagem->formato;
+                                    }
+                                }
+                            }else{
+                                $data['qtd_estoque_logosystem'] = $tamanho->qtde_estoque;
+                            }
+                            $data['itemid'] = $item['id'];
+                            $success = $this->invoice_items_model->edit($data);
+                        }
+                    }
+                }
+            }
+
+            $tabelaspreco = atualizar_precos_logosystem($atualizar_todos_items = false);
+            foreach($tabelaspreco as $tabelapreco){
+                $ultima_alteracao_tabela = strtotime($tabelapreco->ultima_alteracao);
+                if($ultima_alteracao_tabela > $ultima_atualizacao_produtos || $atualizar_todos_items){
+                    foreach($tabelapreco->produtos as $produto){
+                        foreach($produto->variantes as $variante){
+                            foreach($variante->grade as $grade){
+                                $this->db->where('codigo_logosystem', $produto->codigo);
+                                $this->db->where('cor_logosystem', $variante->cor_nome);
+                                $this->db->where('tamanho_logosystem', $grade->tamanho);
+                                $item = $this->db->get(db_prefix() . 'items')->row_array();
+                                $data = array();        
+                                if(! is_null($item)){
+                                    $data['itemid'] = $item['id'];
+                                    $data['rate'] = $grade->preco;
+                                    $success = $this->invoice_items_model->edit($data);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        update_option("last_updated_items", strtotime("-1 day"));
+    }
+
 
     /* List all available items */
     public function index()
@@ -44,7 +139,8 @@ class Invoice_items extends AdminController
     public function manage()
     {
         if (has_permission('items', '', 'view')) {
-            if ($this->input->post()) {
+            //QUANDO TEM INTEGRAÇÃO NÃO PODE ADICIONAR OU EDITAR MANUAL
+            if ($this->input->post() && !integracao_logosystem()) {
                 $data = $this->input->post();
                 if ($data['itemid'] == '') {
                     if (!has_permission('items', '', 'create')) {
@@ -61,7 +157,6 @@ class Invoice_items extends AdminController
                         $message = _l('added_successfully', _l('sales_item'));
                         set_alert('success', $message);
                     }
-                    redirect(admin_url('invoice_items'));
                     echo json_encode([
                         'success' => $success,
                         'message' => $message,
@@ -81,7 +176,6 @@ class Invoice_items extends AdminController
                     }else{
                         $success = false;
                     }
-                    redirect(admin_url('invoice_items'));
                     echo json_encode([
                         'success' => $success,
                         'message' => $message,
@@ -96,7 +190,9 @@ class Invoice_items extends AdminController
         if (!has_permission('items', '', 'create')) {
             access_denied('Items Import');
         }
-
+        if(integracao_logosystem()){
+            access_denied('Não é possível importar com integração Logosystem');
+        }
         $this->load->library('import/import_items', [], 'import');
 
         $this->import->setDatabaseFields($this->db->list_fields(db_prefix() . 'items'))
@@ -158,7 +254,9 @@ class Invoice_items extends AdminController
         if (!has_permission('items', '', 'delete')) {
             access_denied('Invoice Items');
         }
-
+        if(integracao_logosystem()){
+            access_denied('Não é possível deletar com integração Logosystem');
+        }
         if (!$id) {
             redirect(admin_url('invoice_items'));
         }
@@ -236,7 +334,9 @@ class Invoice_items extends AdminController
         if (!has_permission('items', '', 'create')) {
             access_denied('Create Item');
         }
-
+        if(integracao_logosystem()){
+            access_denied('Não é possível copiar com integração Logosystem');
+        }
         $data = (array) $this->invoice_items_model->get($id);
 
         $id = $this->invoice_items_model->copy($data);
