@@ -7091,6 +7091,7 @@ function add_item_to_preview(id) {
     clear_item_preview_values();
 
     $('.main input[name="item_image"]').val(response.item_image);
+    $('.main input[name="format_image"]').val(response.format_image);
     $('.main input[name="original_id"]').val(response.itemid);
     $('.main textarea[name="description"]').val(response.description);
     $('.main textarea[name="long_description"]').val(
@@ -7111,6 +7112,23 @@ function add_item_to_preview(id) {
 
     $(".main select.tax").selectpicker("val", taxSelectedArray);
     $('.main input[name="unit"]').val(response.unit);
+    if(response.format_image != null){
+        var src_img = "data:image/"+response.format_image+";base64, "+response.item_image;
+    }else{
+        var src_img = $("#item_image_img").attr('data') + response.itemid + '/' + response.item_image;
+    }
+    var src_delete_link = $("#item_image_delete_link").attr('data') + response.itemid;
+    if(response.item_image != null){
+        $("#contact-item-image").addClass('hide');
+        $("#item_image_img").attr('src', src_img);
+        $("#item_image_delete_link").removeClass('hide');
+        $("#item_image_delete_link").attr('href', src_delete_link);
+    }else{
+        $("#contact-item-image").removeClass('hide');
+        $("#item_image_img").removeAttr('src');
+        $("#item_image_delete_link").addClass('hide');
+        $("#item_image_delete_link").removeAttr('href');
+    }
 
     var $currency = $("body").find(
       '.accounting-template select[name="currency"]'
@@ -7227,6 +7245,11 @@ function clear_item_preview_values(default_taxes) {
   previewArea.find("select.tax").selectpicker("val", last_taxes_applied);
   previewArea.find('input[name="rate"]').val("");
   previewArea.find('input[name="unit"]').val("");
+  previewArea.find('input[name="item_image"]').val("");
+  previewArea.find('input[name="format_image"]').val("");
+  previewArea.find('input[name="original_id"]').val("");
+  previewArea.find('#item_image_img').attr("src", "");
+
 
   $('input[name="task_id"]').val("");
   $('input[name="expense_id"]').val("");
@@ -7298,6 +7321,13 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
       item_key +
       '][item_image]" value="' +
       data.item_image +
+      '">';
+
+      table_row +=
+      '<input type="hidden" name="newitems[' +
+      item_key +
+      '][format_image]" value="' +
+      data.format_image +
       '">';
 
 
@@ -7430,7 +7460,10 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
       data.rate +
       '" class="form-control"></td>';
 
-    table_row += '<td class="taxrate">' + tax_dropdown + "</td>";
+    
+    table_row += '<td><img style="max-width:200px;" id="item_image_img'+item_key+'" src=""></td>';
+
+    //table_row += '<td class="taxrate">' + tax_dropdown + "</td>";
 
     table_row +=
       '<td class="amount" align="right">' +
@@ -7489,6 +7522,18 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
     init_color_pickers();
     clear_item_preview_values();
     reorder_items();
+
+    if(data.format_image != ""){
+        var src_img = "data:image/"+data.format_image+";base64, "+data.item_image;
+    }else{
+        var src_img = $("#item_image_img").attr('data') + data.original_id + '/' + data.item_image;
+    }
+    if(data.item_image != null){
+        $("#item_image_img"+item_key).attr('src', src_img);
+    }else{
+        $("#item_image_img"+item_key).removeAttr('src');
+    }
+
 
     $("body").find("#items-warning").remove();
     $("body").find(".dt-loader").remove();
@@ -7649,6 +7694,7 @@ function get_item_preview_values() {
   response.rate = $('.main input[name="rate"]').val();
   response.unit = $('.main input[name="unit"]').val();
   response.item_image = $('.main input[name="item_image"]').val();
+  response.format_image = $('.main input[name="format_image"]').val();
   response.original_id = $('.main input[name="original_id"]').val();
   return response;
 }

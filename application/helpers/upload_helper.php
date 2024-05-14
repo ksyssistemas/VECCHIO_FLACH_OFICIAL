@@ -1206,3 +1206,63 @@ function handle_proposal_item_image_upload($itemId)
 
     return false;
 }
+
+
+/**
+ * Função para enviar imagem do item da proposta
+ * @return boolean
+ */
+function handle_proposal_itemable_image_upload($itemId, $key)
+{    
+    if (isset($_FILES['items']) && _perfex_upload_error($_FILES['items']['error'][$key]['new_item_image'])) {
+        set_alert('warning', _perfex_upload_error($_FILES['items']['error'][$key]['new_item_image']));
+
+        return false;
+    }        
+    if (isset($_FILES['items']['name'][$key]['new_item_image']) && $_FILES['items']['name'][$key]['new_item_image'] != '') {
+
+        hooks()->do_action('before_upload_signature_image_attachment');
+        $path = get_upload_path_by_type('proposal'). 'itemable_'.$itemId . '/';
+        // Get the temp file path
+        $tmpFilePath = $_FILES['items']['tmp_name'][$key]['new_item_image'];
+        // Make sure we have a filepath
+        if (!empty($tmpFilePath) && $tmpFilePath != '') {
+            // Getting file extension
+            $path_parts = pathinfo($_FILES['items']['name'][$key]['new_item_image']);
+            $extension  = $path_parts['extension'];
+            $extension  = strtolower($extension);
+
+            $allowed_extensions = [
+                'jpg',
+                'jpeg',
+                'png',
+                'gif',
+                'svg',
+            ];
+            if (!in_array($extension, $allowed_extensions)) {
+                set_alert('warning', 'Image extension not allowed.');
+
+                return false;
+            }
+            // Setup our new file path
+            $filename    = unique_filename($path, $_FILES['items']['name'][$key]['new_item_image']);
+            $newFilePath = $path . $filename;
+            _maybe_create_upload_path($path);
+            // Upload the file into the company uploads dir
+            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                $CI = & get_instance();
+                $CI->db->where('id', $itemId);
+                $CI->db->update(db_prefix() . 'itemable', [
+                    'item_image' => $filename,
+                    'format_image' => null,
+                    'alternative_path_image' => 1,
+                ]);
+                //update_option('item_image', $filename);
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

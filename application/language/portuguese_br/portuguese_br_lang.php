@@ -1165,6 +1165,7 @@ $lang['estimate_status_declined']        = 'Declinado';
 $lang['estimate_status_accepted']        = 'Aceito';
 $lang['estimate_status_expired']         = 'Expirado';
 $lang['estimate_note']                   = 'Nota:';
+$lang['estimate_image']                  = 'Imagem';
 
 ## Clients
 $lang['clients_estimate_dt_number']             = 'Orçamento #';

@@ -221,6 +221,8 @@ class Proposals_model extends App_Model
         $items = $hook['items'];
 
         unset($data['item_image']);
+        unset($data['format_image']);
+        unset($data['new_item_image']);
         unset($data['original_id']);
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
@@ -364,6 +366,8 @@ class Proposals_model extends App_Model
 
         unset($data['removed_items']);
         unset($data['item_image']);
+        unset($data['format_image']);
+        unset($data['new_item_image']);
         unset($data['original_id']);
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'proposals', $data);
@@ -391,6 +395,10 @@ class Proposals_model extends App_Model
         foreach ($items as $key => $item) {
             if (update_sales_item_post($item['itemid'], $item)) {
                 $affectedRows++;
+            }
+            if (isset($_FILES['items']['name'][$key]['new_item_image']) && $_FILES['items']['name'][$key]['new_item_image'] != '') {
+                $this->delete_proposal_itemable_image($item['itemid']);
+                handle_proposal_itemable_image_upload($item['itemid'], $key);
             }
 
             if (isset($item['custom_fields'])) {
@@ -1124,5 +1132,23 @@ class Proposals_model extends App_Model
         }
 
         return $kanBan->get();
+    }
+
+    public function delete_proposal_itemable_image($id)
+    {
+        if (is_dir(get_upload_path_by_type('proposal'). 'itemable_'.$id . '/')) {
+            $delete_dir = delete_dir(get_upload_path_by_type('proposal'). 'itemable_'.$id . '/');
+        }
+        $this->db->where('id', $id);
+        $update_bd = $this->db->update(db_prefix() . 'itemable', [
+            'item_image' => null,
+            'format_image' => null,
+            'alternative_path_image' => null,
+        ]);
+        if($delete_dir && $update_bd){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

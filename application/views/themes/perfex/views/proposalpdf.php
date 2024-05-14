@@ -139,12 +139,16 @@ $quantos_items = count($proposal->items);
 $contador_items = 0;
 foreach ($proposal->items as $item){
     $contador_items++;
-    if($item['item_image'] != null){
-        $url_img_item = '/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
+    if($item['format_image'] != null){
+        $url_img_item = 'data:image/'.$item['format_image'].';base64, '.$item['item_image'];
+    }else if($item['alternative_path_image'] == 1){
+        $url_img_item .= base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
+    }else if ($item['item_image'] != null){
+        $url_img_item = base_url("").'/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
     }else{
-        $url_img_item = '/uploads/company/logo_sutil.jpg';
+        $url_img_item = base_url("").'/uploads/company/logo_sutil.jpg';
     }
-    $this->MultiCell(90, 10, '<img src="'. base_url($url_img_item). '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(90, 10, '<img src="'. $url_img_item . '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
     $this->MultiCell(100, 10, '<b> Quantidade &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Unit. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
     $this->MultiCell(98, 10, '', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
     $this->MultiCell(30, 10, number_format($item['qty'],0,",","."), 0, 'C', 0, 0, '', '', true, 0, true, true, 40);
@@ -417,12 +421,16 @@ $quantos_items = count($proposal->items);
 $contador_items = 0;
 foreach ($proposal->items as $item){
     $contador_items++;
-    if($item['item_image'] != null){
-        $url_img_item = '/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
+    if($item['format_image'] != null){
+        $url_img_item = 'data:image/'.$item['format_image'].';base64, '.$item['item_image'];
+    }else if($item['alternative_path_image'] == 1){
+        $url_img_item .= base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
+    }else if ($item['item_image'] != null){
+        $url_img_item = base_url("").'/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
     }else{
-        $url_img_item = '/uploads/company/logo_sutil.jpg';
+        $url_img_item = base_url("").'/uploads/company/logo_sutil.jpg';
     }
-    $this->MultiCell(90, 10, '<img src="'. base_url($url_img_item). '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(90, 10, '<img src="'. $url_img_item. '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
     $this->MultiCell(100, 10, '<b> Quantidade &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Unit. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
     $this->MultiCell(98, 10, '', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
     $this->MultiCell(30, 10, number_format($item['qty'],0,",","."), 0, 'C', 0, 0, '', '', true, 0, true, true, 40);

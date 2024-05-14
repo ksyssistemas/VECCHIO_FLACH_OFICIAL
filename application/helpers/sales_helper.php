@@ -687,6 +687,7 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
                     'item_order'       => $item['order'],
                     'unit'             => $item['unit'],
                     'item_image'       => $item['item_image'],
+                    'format_image'     => $item['format_image'],
                     'original_id'      => $item['original_id'],
                 ]);
 

@@ -55,7 +55,7 @@
                   ?>
                     <th width="10%" class="qty" align="right"><?php echo $qty_heading; ?></th>
                     <th width="15%" align="right"><?php echo _l('estimate_table_rate_heading'); ?></th>
-                    <th width="20%" align="right"><?php echo _l('estimate_table_tax_heading'); ?></th>
+                    <th width="20%" align="right"><?php echo _l('estimate_image'); ?></th>
                     <th width="10%" align="right"><?php echo _l('estimate_table_amount_heading'); ?></th>
                     <th align="center"><i class="fa fa-cog"></i></th>
                 </tr>
@@ -65,6 +65,7 @@
                     <td></td>
                     <td>
                         <input type="hidden" name="item_image">
+                        <input type="hidden" name="format_image">
                         <input type="hidden" name="original_id">
                         <textarea name="description" rows="4" class="form-control"
                             placeholder="<?php echo _l('item_description_placeholder'); ?>"></textarea>
@@ -88,7 +89,7 @@
                     <td>
                         <?php
                      $default_tax = unserialize(get_option('default_tax'));
-                     $select      = '<select class="selectpicker display-block tax main-tax" data-width="100%" name="taxname" multiple data-none-selected-text="' . _l('no_tax') . '">';
+                     $select      = '<select class="selectpicker tax main-tax hide" data-width="100%" name="taxname" multiple data-none-selected-text="' . _l('no_tax') . '">';
                      foreach ($taxes as $tax) {
                          $selected = '';
                          if (is_array($default_tax)) {
@@ -101,6 +102,7 @@
                      $select .= '</select>';
                      echo $select;
                      ?>
+                        <img style="max-width:200px;" id="item_image_img" src="" data="<?php echo base_url('');?>uploads/proposals/item_"><br>    
                     </td>
                     <td></td>
                     <td>
@@ -159,7 +161,18 @@
                              $table_row .= '<input type="text" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control input-transparent text-right" value="' . $item['unit'] . '">';
                              $table_row .= '</td>';
                              $table_row .= '<td class="rate"><input type="number" data-toggle="tooltip" title="' . _l('numbers_not_formatted_while_editing') . '" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][rate]" value="' . $item['rate'] . '" class="form-control"></td>';
-                             $table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
+                             $table_row .=  '<td><div id="contact-item-image">
+                                    <input type="file" name="' . $items_indicator . '[' . $i . '][new_item_image]" class="form-control" id="new_item_image">
+                                </div>';
+                            if($item['format_image'] != null){
+                                $table_row .= '<img style="max-width:200px;" id="' . $items_indicator . '[' . $i . ']item_image_img" src="data:image/'.$item['format_image'].';base64, '.$item['item_image'].'">';
+                            }else if($item['alternative_path_image'] == 1){
+                                $table_row .= '<img style="max-width:200px;" id="' . $items_indicator . '[' . $i . ']item_image_img" src="'.base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'].'">';
+                            }else if ($item['item_image'] != null){
+                                $table_row .= '<img style="max-width:200px;" id="' . $items_indicator . '[' . $i . ']item_image_img" src="'.base_url("").'uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'].'">';
+                            }
+                             $table_row .= '</td>';
+                             //$table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
                              $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
                              $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
                              $table_row .= '</tr>';
