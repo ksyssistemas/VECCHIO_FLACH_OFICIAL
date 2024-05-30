@@ -2,7 +2,11 @@
 <?php $this->load->view('authentication/includes/head.php'); ?>
 
 <body class="tw-bg-neutral-100 login_admin">
-
+    <div class="row" style="margin:0;padding-right:0;">
+        <div class="col-md-5 hidden-xs hidden-sm " style="height:100vh; padding-right:0; background-color:rgb(20,34,81); ">
+            <img src="<?=base_url('uploads/company/tela-login-crm.jpg')?>" style="float:right;max-width: 95%;">
+            </div>
+        <div class="col-md-7 ">
     <div class="tw-max-w-md tw-mx-auto tw-pt-24 authentication-form-wrapper tw-relative tw-z-20">
         <div class="company-logo text-center">
             <?php get_dark_company_logo(); ?>
@@ -64,6 +68,8 @@
             <?php echo form_close(); ?>
         </div>
     </div>
+    </div>
+</div>
 
 </body>
 

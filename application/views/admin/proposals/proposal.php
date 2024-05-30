@@ -206,8 +206,12 @@
                                                 "proposal_type" => "Sutil Máquinas",
                                             ), 
                                             "1" => array(
-                                                "proposal_type_id" => "Sutil Cargo",
-                                                "proposal_type" => "Sutil Cargo",
+                                                "proposal_type_id" => "Carreta Biomassa",
+                                                "proposal_type" => "Carreta Biomassa",
+                                            ),
+                                            "2" => array(
+                                                "proposal_type_id" => "Carreta Resíduos",
+                                                "proposal_type" => "Carreta Resíduos",
                                             )
                                         ); ?>
                                         <?php $selected  = (isset($proposal) ? $proposal->proposal_type : ''); ?>

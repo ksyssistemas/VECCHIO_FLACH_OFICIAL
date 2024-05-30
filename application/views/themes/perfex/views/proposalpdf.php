@@ -5,10 +5,10 @@ $dimensions = $pdf->getPageDimensions();
 /*
     TIPO DE PROPOSTA MAQUINAS
 */
-if($proposal->proposal_type != "Sutil Cargo"){
+if($proposal->proposal_type == "Sutil Máquinas"){
     //página 1
-$html = '<img src="'. base_url('/uploads/company/logo_sutil.jpg'). '">';
-$html .= '<br> <h1 align="center" style="font-size:70px;">' . $proposal->subject . '</h1>';
+$html = '<div  style="text-align: center;"><img style="text-align: center;" src="'. base_url('/uploads/company/logo_sutil.jpg'). '"></div>';
+$html .= '<h1 align="center" style="font-size:50px;">' . $proposal->subject . '</h1>';
 $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->addPage();
 //página 2
@@ -62,19 +62,19 @@ $this->MultiCell(190, 1, '<hr>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 //informações da proposta e cliente
 $rel_data = get_relation_data($proposal->rel_type, $proposal->rel_id);
 $rel_val  = get_relation_values($rel_data, $proposal->rel_type);
-$menu_proposta_cliente = 'Situação:<br>Cliente:<br>CNPJ:<br>Endereço:<br>Cidade:<br>Contato:<br>E-mail:<br>Tipo de Frete:<br>Proposta:';
+//$menu_proposta_cliente = 'Situação:<br>Cliente:<br>:<br>Endereço:<br>Cidade:<br>Contato:<br>E-mail:<br>Tipo de Frete:<br>Proposta:';
 
-$texto_proposta_cliente = strtoupper(format_proposal_status($proposal->status)).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Data Emissão: </b>'._d($proposal->date).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tipo Proposta:</b> '.$proposal->proposal_type.'<br>';
-$texto_proposta_cliente .= $proposal->rel_id.' - '. $rel_val['name'].'<br>';
-$texto_proposta_cliente .= $rel_data->vat.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IE: '. $rel_data->rg_ie.'<br>';
-$texto_proposta_cliente .= $proposal->address.'<br>';
-$texto_proposta_cliente .= $proposal->city.' / '. $proposal->state.'<br>';
-$texto_proposta_cliente .= $proposal->proposal_to.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fone: '. $proposal->phone.'<br>';
-$texto_proposta_cliente .= '<a>'.$proposal->email.'</a><br>';
-$texto_proposta_cliente .= $proposal->shipping_type.'<br>';
-$texto_proposta_cliente .= $proposal->id. '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rev.: 0<br>';
-$this->MultiCell(60, 40, $menu_proposta_cliente, 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
-$this->MultiCell(130, 40, $texto_proposta_cliente, 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
+$texto_proposta_cliente = '<b>Situação:</b> '.strtoupper(format_proposal_status($proposal->status)).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Data Emissão: </b>'._d($proposal->date).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tipo Proposta:</b> '.$proposal->proposal_type.'<br>';
+$texto_proposta_cliente .= '<b>Cliente:</b> '.$proposal->rel_id.' - '. $rel_val['name'].'<br>';
+$texto_proposta_cliente .= '<b>CNPJ:</b> '.$rel_data->vat.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>IE:</b> '. $rel_data->rg_ie.'<br>';
+$texto_proposta_cliente .= '<b>Endereço:</b> '.$proposal->address.'<br>';
+$texto_proposta_cliente .= '<b>Cidade:</b> '.$proposal->city.' / '. $proposal->state.'<br>';
+$texto_proposta_cliente .= '<b>Contato:</b> '.$proposal->proposal_to.'<br>';
+$texto_proposta_cliente .= '<b>E-mail:</b> <a>'.$proposal->email.'</a>.'.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.'<b>Fone:</b> '. $proposal->phone.'<br>';
+$texto_proposta_cliente .= '<b>Tipo de Frete:</b> '.$proposal->shipping_type.'<br>';
+$texto_proposta_cliente .= '<b>Proposta</b>: '.$proposal->id. '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.'<b>Rev.:</b> 0<br>';
+//$this->MultiCell(30, 40, $menu_proposta_cliente, 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(190, 40, $texto_proposta_cliente, 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 $this->MultiCell(190, 1, '<hr>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 $this->SetFont($this->get_font_name(), '', 12);
 $this->MultiCell(190, 5, '<b>Itens da Proposta</b>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
@@ -132,34 +132,55 @@ if ($proposal->show_quantity_as == 2) {
 // The items table
 $items = get_items_table_data($proposal, 'proposal', 'pdf')
         ->set_headings('estimate');
-
-//$items_html = $items->table();
 $this->SetFont($this->get_font_name(), '', 11);
+$this->MultiCell(40, 10, '<b> Código </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(80, 10, '<b> Descrição </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(20, 10, '<b> Qtdade </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(25, 10, '<b> Valor Unit. </b', 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(25, 10, '<b> Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
+//$items_html = $items->table();
+$this->SetFont($this->get_font_name(), '', 10);
 $quantos_items = count($proposal->items);
 $contador_items = 0;
+$this->SetFillColor(200, 255, 127);
 foreach ($proposal->items as $item){
     $contador_items++;
+    $y = $pdf->getY();
+    if($y >= 255){//para não bugar um produto no final da pagina e ir corretamente para a proxima pagina
+        $pdf->addPage();
+    }
+    if($contador_items % 2 == 0){
+    //if(true){
+        $pdf->SetFillColor(200, 200, 200);
+    }else{
+        $pdf->SetFillColor(255, 255, 255);
+    }
+
     if($item['format_image'] != null){
         $url_img_item = 'data:image/'.$item['format_image'].';base64, '.$item['item_image'];
     }else if($item['alternative_path_image'] == 1){
-        $url_img_item .= base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
+        $url_img_item = base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
     }else if ($item['item_image'] != null){
         $url_img_item = base_url("").'/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
     }else{
         $url_img_item = base_url("").'/uploads/company/logo_sutil.jpg';
     }
-    $this->MultiCell(90, 10, '<img src="'. $url_img_item . '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(100, 10, '<b> Quantidade &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Unit. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(98, 10, '', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(30, 10, number_format($item['qty'],0,",","."), 0, 'C', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(32, 10, $proposal->symbol.number_format($item['rate'],2,",","."), 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(30, 10, $proposal->symbol.number_format($item['qty']*$item['rate'],2,",","."), 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(98, 70, '', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(190, 60, '<h4>'.$item['description'].'</h4><p>'.$item['long_description'].'</p>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
+    
+    $pdf->MultiCell(40, 10, '<b>'.$item['original_id'].'</b>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    $pdf->MultiCell(80, 10, '<h4>'.$item['description'].'</h4>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(20, 10, '<b>'.number_format($item['qty'],0,",",".").'</b>', 0, 'C', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(25, 10, '<b>'.$proposal->symbol.number_format($item['rate'],2,",",".").'</b>', 0, 'R', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(25, 10, '<b>'.$proposal->symbol.number_format($item['qty']*$item['rate'],2,",",".").'</b>', 0, 'R', 1, 1, '', '', true, 0, true, true, 40);
+    $this->MultiCell(40, 60, '<img src="'. $url_img_item. '">', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    //$this->MultiCell(98, 10, '', 1, 'L', 0, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(150, 60, '<p>'.$item['long_description'].'</p>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+
+    $this->MultiCell(15, 45, '', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
     if($contador_items < $quantos_items){
-        $pdf->addPage();
+        //$pdf->addPage();
     }
-}                                                           
+}
+$pdf->SetFillColor(255, 255, 255);                                     
 $items_html .= '<br/><br/><br/><br/>';
 $items_html .= '';
 $items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
@@ -289,9 +310,13 @@ $this->MultiCell(80, 1, $proposal->rel_id.' - '. strtoupper($rel_val['name']).'<
 }
 else {
     //página 1
-$html = '<img src="'. base_url('/uploads/company/logo_sutil_cargo.jpg'). '">';
-$html .= '<br> <h1 align="center" style="font-size:70px;">' . $proposal->subject . '</h1>';
-$html .= '<img src="'. base_url('/uploads/company/caminhao_sutil_cargo.jpg'). '">';
+$html = '<div  style="text-align: center;"><img src="'. base_url('/uploads/company/logo_sutil_cargo.jpg'). '"></div>';
+$html .= '<h1 align="center" style="font-size:50px;">' . $proposal->subject . '</h1>';
+if($proposal->proposal_type == "Carreta Biomassa"){
+    $html .= '<img src="'. base_url('/uploads/company/caminhao_sutil_cargo.jpg'). '">';
+}else{
+    $html .= '<img src="'. base_url('/uploads/company/caminhao_sutil_residuos.jpeg'). '">';
+}
 $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->addPage();
 //página 2
@@ -344,19 +369,19 @@ $this->MultiCell(190, 1, '<hr>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 //informações da proposta e cliente
 $rel_data = get_relation_data($proposal->rel_type, $proposal->rel_id);
 $rel_val  = get_relation_values($rel_data, $proposal->rel_type);
-$menu_proposta_cliente = 'Situação:<br>Cliente:<br>CNPJ:<br>Endereço:<br>Cidade:<br>Contato:<br>E-mail:<br>Tipo de Frete:<br>Proposta:';
+//$menu_proposta_cliente = 'Situação:<br>Cliente:<br>:<br>Endereço:<br>Cidade:<br>Contato:<br>E-mail:<br>Tipo de Frete:<br>Proposta:';
 
-$texto_proposta_cliente = strtoupper(format_proposal_status($proposal->status)).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Data Emissão: </b>'._d($proposal->date).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tipo Proposta:</b> '.$proposal->proposal_type.'<br>';
-$texto_proposta_cliente .= $proposal->rel_id.' - '. $rel_val['name'].'<br>';
-$texto_proposta_cliente .= $rel_data->vat.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IE: '. $rel_data->rg_ie.'<br>';
-$texto_proposta_cliente .= $proposal->address.'<br>';
-$texto_proposta_cliente .= $proposal->city.' / '. $proposal->state.'<br>';
-$texto_proposta_cliente .= $proposal->proposal_to.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fone: '. $proposal->phone.'<br>';
-$texto_proposta_cliente .= '<a>'.$proposal->email.'</a><br>';
-$texto_proposta_cliente .= $proposal->shipping_type.'<br>';
-$texto_proposta_cliente .= $proposal->id. '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Rev.: 0<br>';
-$this->MultiCell(60, 40, $menu_proposta_cliente, 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
-$this->MultiCell(130, 40, $texto_proposta_cliente, 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
+$texto_proposta_cliente = '<b>Situação:</b> '.strtoupper(format_proposal_status($proposal->status)).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Data Emissão: </b>'._d($proposal->date).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tipo Proposta:</b> '.$proposal->proposal_type.'<br>';
+$texto_proposta_cliente .= '<b>Cliente:</b> '.$proposal->rel_id.' - '. $rel_val['name'].'<br>';
+$texto_proposta_cliente .= '<b>CNPJ:</b> '.$rel_data->vat.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>IE:</b> '. $rel_data->rg_ie.'<br>';
+$texto_proposta_cliente .= '<b>Endereço:</b> '.$proposal->address.'<br>';
+$texto_proposta_cliente .= '<b>Cidade:</b> '.$proposal->city.' / '. $proposal->state.'<br>';
+$texto_proposta_cliente .= '<b>Contato:</b> '.$proposal->proposal_to.'<br>';
+$texto_proposta_cliente .= '<b>E-mail:</b> <a>'.$proposal->email.'</a>.'.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.'<b>Fone:</b> '. $proposal->phone.'<br>';
+$texto_proposta_cliente .= '<b>Tipo de Frete:</b> '.$proposal->shipping_type.'<br>';
+$texto_proposta_cliente .= '<b>Proposta</b>: '.$proposal->id. '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.'<b>Rev.:</b> 0<br>';
+//$this->MultiCell(30, 40, $menu_proposta_cliente, 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(190, 40, $texto_proposta_cliente, 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 $this->MultiCell(190, 1, '<hr>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
 $this->SetFont($this->get_font_name(), '', 12);
 $this->MultiCell(190, 5, '<b>Itens da Proposta</b>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
@@ -414,34 +439,54 @@ if ($proposal->show_quantity_as == 2) {
 // The items table
 $items = get_items_table_data($proposal, 'proposal', 'pdf')
         ->set_headings('estimate');
-
-//$items_html = $items->table();
 $this->SetFont($this->get_font_name(), '', 11);
+$this->MultiCell(40, 10, '<b> Código </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(80, 10, '<b> Descrição </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(20, 10, '<b> Qtdade </b', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(25, 10, '<b> Valor Unit. </b', 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
+$this->MultiCell(25, 10, '<b> Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
+//$items_html = $items->table();
+$this->SetFont($this->get_font_name(), '', 10);
 $quantos_items = count($proposal->items);
 $contador_items = 0;
+$this->SetFillColor(200, 255, 127);
 foreach ($proposal->items as $item){
     $contador_items++;
+    $y = $pdf->getY();
+    if($y >= 220){//para não bugar um produto no final da pagina e ir corretamente para a proxima pagina
+        $pdf->addPage();
+    }
+    if($contador_items % 2 == 0){
+    //if(true){
+        $pdf->SetFillColor(200, 200, 200);
+    }else{
+        $pdf->SetFillColor(255, 255, 255);
+    }
+
     if($item['format_image'] != null){
         $url_img_item = 'data:image/'.$item['format_image'].';base64, '.$item['item_image'];
     }else if($item['alternative_path_image'] == 1){
-        $url_img_item .= base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
+        $url_img_item = base_url("").'uploads/proposals/itemable_'.$item['id'].'/'.$item['item_image'];
     }else if ($item['item_image'] != null){
         $url_img_item = base_url("").'/uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'];
     }else{
         $url_img_item = base_url("").'/uploads/company/logo_sutil.jpg';
     }
-    $this->MultiCell(90, 10, '<img src="'. $url_img_item. '">', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(100, 10, '<b> Quantidade &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Unit. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Valor Total </b', 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(98, 10, '', 0, 'L', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(30, 10, number_format($item['qty'],0,",","."), 0, 'C', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(32, 10, $proposal->symbol.number_format($item['rate'],2,",","."), 0, 'R', 0, 0, '', '', true, 0, true, true, 40);
-    $this->MultiCell(30, 10, $proposal->symbol.number_format($item['qty']*$item['rate'],2,",","."), 0, 'R', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(98, 70, '', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
-    $this->MultiCell(190, 60, '<h4>'.$item['description'].'</h4><p>'.$item['long_description'].'</p>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
+    
+    $pdf->MultiCell(40, 10, '<b>'.$item['original_id'].'</b>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    $pdf->MultiCell(80, 10, '<h4>'.$item['description'].'</h4>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(20, 10, '<b>'.number_format($item['qty'],0,",",".").'</b>', 0, 'C', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(25, 10, '<b>'.$proposal->symbol.number_format($item['rate'],2,",",".").'</b>', 0, 'R', 1, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(25, 10, '<b>'.$proposal->symbol.number_format($item['qty']*$item['rate'],2,",",".").'</b>', 0, 'R', 1, 1, '', '', true, 0, true, true, 40);
+    $this->MultiCell(40, 50, '<img src="'. $url_img_item. '">', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    //$this->MultiCell(98, 10, '', 1, 'L', 0, 0, '', '', true, 0, true, true, 40);
+    $this->MultiCell(150, 50, '<p>'.$item['long_description'].'</p>', 0, 'L', 1, 0, '', '', true, 0, true, true, 40);
+    $pdf->SetFillColor(255, 255, 255);
+    $this->MultiCell(15, 45, '', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
     if($contador_items < $quantos_items){
-        $pdf->addPage();
+        //$pdf->addPage();
     }
-}                                                           
+}                                  
 $items_html .= '<br/><br/><br/><br/>';
 $items_html .= '';
 $items_html .= '<table cellpadding="6" style="font-size:' . ($font_size + 4) . 'px">';
