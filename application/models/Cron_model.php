@@ -2049,8 +2049,7 @@ class Cron_model extends App_Model
                     }
                 }
             }
-
+            update_option("last_updated_items", strtotime("-1 day"));
         }
-        update_option("last_updated_items", strtotime("-1 day"));
     }
 }
