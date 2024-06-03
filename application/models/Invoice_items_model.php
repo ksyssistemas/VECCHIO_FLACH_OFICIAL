@@ -258,7 +258,8 @@ class Invoice_items_model extends App_Model
 
     public function search($q)
     {
-        $this->db->select('rate, id, description as name, long_description as subtext');
+        $this->db->select('rate, id, description as name, long_description as subtext, active, qtd_estoque_logosystem');
+        $this->db->where('active !=', '0');
         $this->db->like('description', $q);
         $this->db->or_like('long_description', $q);
 
@@ -266,7 +267,7 @@ class Invoice_items_model extends App_Model
 
         foreach ($items as $key => $item) {
             $items[$key]['subtext'] = strip_tags(mb_substr($item['subtext'], 0, 200)) . '...';
-            $items[$key]['name']    = '(' . app_format_number($item['rate']) . ') ' . $item['name'];
+            $items[$key]['name']    = '(' . app_format_number($item['rate']) . ') ' . $item['name']. " ("._l('invoice_item_qtd_estoque_r')." ".$item['qtd_estoque_logosystem'].")";
         }
 
         return $items;

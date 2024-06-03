@@ -20,6 +20,7 @@ if(get_option('integrado_logosystem')){
         't2.taxrate as taxrate_2',
         'unit',
         db_prefix() . 'items_groups.name as group_name',
+        'active',
         ]);
 }else{
     $aColumns = array_merge($aColumns, [
@@ -75,6 +76,9 @@ foreach ($rResult as $aRow) {
 
     $descriptionOutput = '';
     $descriptionOutput = '<a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="' . $aRow['id'] . '">' . $aRow['description'] . '</a>';
+    if(get_option('integrado_logosystem') && $aRow['active'] == 0){
+        $descriptionOutput .= " ("._l('invoice_item_not_active').")";
+    }
     $descriptionOutput .= '<div class="row-options">';
 
     if(!get_option('integrado_logosystem')){

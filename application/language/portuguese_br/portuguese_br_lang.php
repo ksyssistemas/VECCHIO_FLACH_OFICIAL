@@ -218,6 +218,7 @@ $lang['invoice_item_add_heading']          = 'Adicionar Novo Item';
 $lang['invoice_item_image']                = 'Imagem do Item';
 $lang['invoice_item_deleted']              = 'Imagem adicionada com sucesso';
 $lang['invoice_item_deleted_not_deleted']  = 'Imagem não adiconada, tente novamente';
+$lang['invoice_item_not_active']           = 'Desativado';
 
 # Invoices
 $lang['invoices']                       = 'Faturas';
@@ -1231,6 +1232,7 @@ $lang['invoice_item_comments'] = 'Observações';
 $lang['invoice_item_color'] = 'Cor';
 $lang['invoice_item_size'] = 'Tamanho';
 $lang['invoice_item_qtd_estoque'] = 'Quantidade em Estoque';
+$lang['invoice_item_qtd_estoque_r'] = 'QTD em Estoque';
 # Customers
 $lang['clients_list_phone']                = 'Telefone';
 $lang['client_expenses_tab']               = 'Despesas';

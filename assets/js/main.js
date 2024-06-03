@@ -4826,8 +4826,6 @@ function init_lead(id, isEdit) {
 function validate_lead_form() {
   var validationObject = {
     name: "required",
-    email: "required",
-    phonenumber: "required",
     source: "required",
     status: {
       required: {
