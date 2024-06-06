@@ -1,4 +1,9 @@
 app-config.php
 configConnectionBTV.json
+#ignora pasta uploads
 /uploads
 /media
+
+#não ignorar a pasta company que fica dentro de uploads
+!uploads/company
+!uploads/company/**
