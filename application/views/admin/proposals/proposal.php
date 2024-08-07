@@ -219,7 +219,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <?php $value = (isset($proposal) ? $proposal->payment_terms : ''); ?>
-                                        <?php echo render_input('payment_terms', 'proposal_payment_terms', $value); ?>
+                                        <?php echo render_select('payment_terms', $payment_terms_types, ['codigo_logosystem', 'descricao'], 'proposal_payment_terms', $value); ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <?php $value2 = (isset($proposal) ? $proposal->order_type : ''); ?>
+                                        <?php echo render_select('order_type', $order_types, ['codigo_logosystem', 'descricao'], 'proposal_order_type', $value2); ?>
                                     </div>
                                 </div>
                             </div>
@@ -233,7 +239,7 @@
                                         } elseif (isset($status_id)) {
                                             $selected = $status_id;
                                         }
-                                        echo render_proposals_status_select($statuses, $selected, 'proposals_add_edit_status', select_attrs:["onChange" => "validate_contains_idBTV()"]);
+                                        echo render_proposals_status_select($statuses, $selected, 'proposals_add_edit_status', select_attrs:["onChange" => "validate_contains_idBTV();validate_data_logosystem();"]);
                                          ?>
                                     </div>
                                     <div class="col-md-6">
@@ -251,7 +257,7 @@
                                     </div>
                                 </div>
                                 <input id="idBTV" type="hidden" value="">
-                                <div id ="staff_idBTV_notfound_assigned" class="hide text-danger"><?=_l('staff_idBTV_notfound_assigned')?></div>
+                                <div id ="staff_idBTV_notfound_assigned" class="hide text-danger"><?=_l('staff_idlogosystem_notfound_assigned')?></div>
                                 <?php $value = (isset($proposal) ? $proposal->proposal_to : ''); ?>
                                 <?php echo render_input('proposal_to', 'proposal_to', $value); ?>
                                 <?php $value = (isset($proposal) ? $proposal->address : ''); ?>
@@ -477,13 +483,28 @@ function validate_contains_idBTV(){
     data:{'GetConfig':'YES', 'staffid': assigned},
     dataType:"JSON"
     }).responseJSON;
-    if(status == 1 && idBTV == null){
+    if(status == 1 && (idBTV == null || idBTV <=0 )){
         $("#staff_idBTV_notfound_assigned").removeClass('hide');
         $("#idBTV").attr('required', 'required');
         return false;
     }else{
         $("#staff_idBTV_notfound_assigned").addClass('hide');
         $("#idBTV").removeAttr('required');
+        return true;
+    }
+}
+function validate_data_logosystem(){
+    var status = $("#status").val();
+    if(status == 1 ){
+        if($("#rel_type").val() == "lead"){
+            $("#rel_type").val("customer").change();
+        }
+        $("#order_type").attr('required', 'required');
+        $("#payment_terms").attr('required', 'required');
+        return false;
+    }else{
+        $("#payment_terms").removeAttr('required');
+        $("#order_type").removeAttr('required');
         return true;
     }
 }

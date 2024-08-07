@@ -95,6 +95,8 @@ class Cron_model extends App_Model
             $this->stop_task_timers();
             $this->non_billed_tasks_notification();
             $this->atualizar_produtos();
+            $this->atualizar_tipo_pedido();
+            $this->atualizar_condicao_pagamento();
 
             /**
              * Finally send any emails in the email queue - if enabled and any
@@ -2052,4 +2054,75 @@ class Cron_model extends App_Model
             update_option("last_updated_items", strtotime("-1 day"));
         }
     }
+
+    public function atualizar_tipo_pedido($atualizar_todos_items = false){
+        $ultima_atualizacao_tipo_pedido = get_option('last_updated_tipo_pedido');
+        
+        if(integracao_logosystem()){
+            $tipos_pedido = atualizar_tipo_pedido_logosystem();
+            foreach($tipos_pedido as $tipo_pedido){
+                $ultima_alteracao_tipo_pedido = strtotime($tipo_pedido->ultima_alteracao);
+                $this->db->where('codigo_logosystem', $tipo_pedido->codigo);
+                $tipo = $this->db->get(db_prefix() . 'logosystem_tipo_pedido')->row_array();
+                $data = array();
+                if(is_null($tipo)){
+                    $data['codigo_logosystem'] = $tipo_pedido->codigo;
+                    $data['descricao'] = $tipo_pedido->descricao;
+                    $data['ultima_alteracao'] = to_sql_date($tipo_pedido->ultima_alteracao);
+                    $this->db->insert(db_prefix() . 'logosystem_tipo_pedido', $data);
+                    $id = $this->db->insert_id();
+                }else{
+                    if($ultima_alteracao_tipo_pedido > $ultima_atualizacao_tipo_pedido || $atualizar_todos_items){
+                        $data['codigo_logosystem'] = $tipo_pedido->codigo;
+                        $data['descricao'] = $tipo_pedido->descricao;
+                        $data['ultima_alteracao'] = to_sql_date($tipo_pedido->ultima_alteracao);
+                        $this->db->where('id', $tipo['id']);
+                        $success = $this->db->update(db_prefix() .'logosystem_tipo_pedido', $data);
+                    }
+                }
+            }
+            update_option("last_updated_tipo_pedido", strtotime("-1 day"));
+        }
+    }
+
+    public function atualizar_condicao_pagamento($atualizar_todos_items = false){
+        $ultima_atualizacao_condicao_pagamento = get_option('last_updated_condicao_pagamento');
+        if(integracao_logosystem()){
+            echo"<pre>";
+            $condicoes_pagamento = atualizar_condicao_pagamento_logosystem();
+            foreach($condicoes_pagamento as $condicao_pagamento){
+                $ultima_alteracao_condicao_pagamento = strtotime($condicao_pagamento->ultima_alteracao);
+                $this->db->where('codigo_logosystem', $condicao_pagamento->codigo);
+                $condicao = $this->db->get(db_prefix() . 'logosystem_condicao_pagamento')->row_array();
+                $data = array();
+                if(is_null($condicao)){
+                    $data['codigo_logosystem'] = $condicao_pagamento->codigo;
+                    $data['descricao'] = $condicao_pagamento->descricao;
+                    $data['dias_entre_parcelas'] = $condicao_pagamento->dias_entre_parcelas;
+                    $data['prazo_medio'] = $condicao_pagamento->prazo_medio;
+                    $data['mes_comercial'] = $condicao_pagamento->mes_comercial;
+                    $data['parcelas'] = json_encode($condicao_pagamento->parcelas);
+                    $data['rateio'] = json_encode($condicao_pagamento->rateio);
+                    $data['ultima_alteracao'] = to_sql_date($condicao_pagamento->ultima_alteracao);
+                    $this->db->insert(db_prefix() . 'logosystem_condicao_pagamento', $data);
+                    $id = $this->db->insert_id();
+                }else{
+                    if($ultima_alteracao_condicao_pagamento > $ultima_atualizacao_condicao_pagamento || $atualizar_todos_items){
+                        $data['codigo_logosystem'] = $condicao_pagamento->codigo;
+                        $data['descricao'] = $condicao_pagamento->descricao;
+                        $data['dias_entre_parcelas'] = $condicao_pagamento->dias_entre_parcelas;
+                        $data['prazo_medio'] = $condicao_pagamento->prazo_medio;
+                        $data['mes_comercial'] = $condicao_pagamento->mes_comercial;
+                        $data['parcelas'] = json_encode($condicao_pagamento->parcelas);
+                        $data['rateio'] = json_encode($condicao_pagamento->rateio);
+                        $data['ultima_alteracao'] = to_sql_date($condicao_pagamento->ultima_alteracao);
+                        $this->db->where('id', $condicao['id']);
+                        $success = $this->db->update(db_prefix() .'logosystem_condicao_pagamento', $data);
+                    }
+                }
+            }
+            update_option("last_updated_condicao_pagamento", strtotime("-1 day"));
+        }   
+    }
+  
 }

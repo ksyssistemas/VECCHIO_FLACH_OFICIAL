@@ -139,6 +139,28 @@ class Proposals extends AdminController
         if ($this->input->post()) {
             $proposal_data = $this->input->post();
 
+            if(integracao_logosystem() && $proposal_data['status'] == 1 ){
+                if($proposal_data['rel_type'] != "customer"){
+                    set_alert('warning', _l('rel_type_customer'));
+                    return redirect($_SERVER['HTTP_REFERER']); 
+                }
+                if($proposal_data['order_type'] == ""){
+                    set_alert('warning', _l('required_order_type'));
+                    return redirect($_SERVER['HTTP_REFERER']); 
+                }
+                if($proposal_data['payment_terms'] == ""){
+                    set_alert('warning', _l('required_payment_terms'));
+                    return redirect($_SERVER['HTTP_REFERER']); 
+                }
+                $this->db->where('staffid', $proposal_data['assigned']);
+                $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+                if($staff['idBTV'] == NULL){
+                    set_alert('warning', _l('staff_idlogosystem_notfound_assigned').$staff['firstname']." ".$staff['lastname']);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
+            }
+            
+
             if (integracao_btv() && $proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer") {
                 //buscar dados do consultor responsavel
                 $this->db->where('staffid', $proposal_data['assigned']);
@@ -154,8 +176,10 @@ class Proposals extends AdminController
                     access_denied('proposals');
                 }
                 $id = $this->proposals_model->add($proposal_data);
-                $this->adicionar_suporte_BTV_proposal($proposal_data);
+     
                 if ($id) {
+                    $this->adicionar_suporte_BTV_proposal($proposal_data);
+                    $this->adicionar_pedido_logosystem_proposal($proposal_data,$id);
                     set_alert('success', _l('added_successfully', _l('proposal')));
                     if ($this->set_proposal_pipeline_autoload($id)) {
                         redirect(admin_url('proposals'));
@@ -168,8 +192,10 @@ class Proposals extends AdminController
                     access_denied('proposals');
                 }
                 $success = $this->proposals_model->update($proposal_data, $id);
-                $this->adicionar_suporte_BTV_proposal($proposal_data);
+                
                 if ($success) {
+                    $this->adicionar_suporte_BTV_proposal($proposal_data);
+                    $this->adicionar_pedido_logosystem_proposal($proposal_data,$id);
                     set_alert('success', _l('updated_successfully', _l('proposal')));
                 }
                 if ($this->set_proposal_pipeline_autoload($id)) {
@@ -209,6 +235,8 @@ class Proposals extends AdminController
         $data['staff']         = $this->staff_model->get('', ['active' => 1]);
         $data['currencies']    = $this->currencies_model->get();
         $data['base_currency'] = $this->currencies_model->get_base_currency();
+        $data['payment_terms_types'] = $this->db->get(db_prefix() . 'logosystem_condicao_pagamento')->result_array();
+        $data['order_types'] = $this->db->get(db_prefix() . 'logosystem_tipo_pedido')->result_array();
 
         $data['title'] = $title;
         $this->load->view('admin/proposals/proposal', $data);
@@ -841,7 +869,7 @@ class Proposals extends AdminController
      }
 /* Adicionar suporte no BTV com itens de proposta */
 public function adicionar_suporte_BTV_proposal($proposal_data) {
-    if($proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer"){
+    if(integracao_btv() && $proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer"){
        
         //pegar codigo do usuario associado a proposta
         $this->db->where('staffid', $proposal_data['assigned']);
@@ -880,6 +908,64 @@ public function adicionar_suporte_BTV_proposal($proposal_data) {
 
 
         criar_suporte_btv($dados);
+    }
+ }
+
+ /* Adicionar pedido na Logosystem com itens de proposta */
+public function adicionar_pedido_logosystem_proposal($proposal_data, $proposal_id) {
+    if(integracao_logosystem() && $proposal_data['status'] == 1 && $proposal_data['rel_type'] == "customer"){
+        
+        //pegar codigo do usuario associado a proposta
+        $this->db->where('staffid', $proposal_data['assigned']);
+        $staff = $this->db->get(db_prefix() . 'staff')->row_array();
+       
+        //pegar os dados do cliente da propostaa
+        $this->db->where('userid', $proposal_data['rel_id']);
+        $costumer = $this->db->get(db_prefix() . 'clients')->row_array();
+        $problema = "";
+
+        $itemsProposal = array();
+        $contadorItem = 0;
+        foreach($proposal_data['items'] as $item){
+            //pegar os dados do item
+            $this->db->where('id', $item['original_id']);
+            $itemOriginal = $this->db->get(db_prefix() . 'items')->row_array();
+            
+            $itemsProposal[$contadorItem]['produto_id'] = $itemOriginal['codigo_logosystem'];
+            $itemsProposal[$contadorItem]['preco_unitario'] = $item['rate'];
+            $itemsProposal[$contadorItem]['total_quantidade'] = $item['qty'];
+
+            $contadorItem++;
+        }
+        foreach($proposal_data['newitems'] as $item){
+            //pegar os dados dos itens novos
+            $this->db->where('id', $item['original_id']);
+            $itemOriginal = $this->db->get(db_prefix() . 'items')->row_array();
+            
+            $itemsProposal[$contadorItem]['produto_id'] = $itemOriginal['codigo_logosystem'];
+            $itemsProposal[$contadorItem]['preco_unitario'] = $item['rate'];
+            $itemsProposal[$contadorItem]['total_quantidade'] = $item['qty'];
+
+            $contadorItem++;
+        }
+
+        $dados = [
+            "data_emissao"=> date('d/m/Y'),
+            "cliente"=> $costumer,
+            "cod_usuario_cadastro"=> $staff['idBTV'],
+            "id_proposta"=> $proposal_id,
+            "proposta"=> $proposal_data,
+            "prazo_entrega_final" => $proposal_data['open_till'] =! ""?$proposal_data['open_till']:$proposal_data['date'],
+            "items"=>$itemsProposal,
+        ];
+
+        $add_pedido_logosystem = json_decode(adicionar_pedido_logosystem($dados));
+
+        //vinculuar a proposta com o id retornado do logosystem
+        if($add_pedido_logosystem->codigo){
+            $this->db->where('id', $proposal_id);
+            $this->db->update(db_prefix() . 'proposals', ['codigo_logosystem' => $add_pedido_logosystem->codigo]);
+        }
     }
  }
 

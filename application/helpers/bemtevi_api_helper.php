@@ -70,18 +70,21 @@ function requestCurl($url, $parametros, $method = 'POST') {
     return $retorno;
 }
 
-function requestCurlLogosystem($url, $parametros, $token, $method = 'GET') {
+function requestCurlLogosystem($url, $parametros = "", $token, $method = 'GET') {
 
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     "Content-Type: application/json",
     "Authorization: bearer $token"
     ));
+    if($parametros != ""){
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    }
+        
 
     $response = curl_exec($ch);
     curl_close($ch);
@@ -410,6 +413,29 @@ function adicionar_cliente_logosystem($data){
     return false;
 }
 
+function adicionar_pedido_logosystem($data){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+        $param = [
+                "codigo_interno" => $data['id_proposta'], 
+                "data_emissao" => $data['data_emissao'],
+                "cliente_id" => $data['cliente']['cod_logosystem'], 
+                "tipo_pedido_id"=>$data['proposta']['order_type'],
+                "representante_id"=>$data['cod_usuario_cadastro'],
+                "condicao_pagto_id"=>$data['proposta']['payment_terms'],
+                "prazo_entrega_inicial"=>$data['proposta']['date'],
+                "prazo_entrega_final"=>$data['prazo_entrega_final'],
+                "itens"=>$data['items'],
+        ];
+        $response = requestCurlLogosystem($conn['url_logosystem']."pedidos",json_encode($param),$conn['token_logosystem'],"POST");
+        $response = json_decode(json_encode($response),true);
+        return $response;
+    } 
+    return false;
+}
+
 function atualizar_produtos_logosystem(){
 
     if(integracao_logosystem()){
@@ -449,6 +475,38 @@ function atualizar_imagens_logosystem($codigo){
         $conn = get_integration_variables();
 
         $response = requestCurlLogosystem($conn['url_logosystem']."produtos/".$codigo."/imagens","",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
+}
+
+function atualizar_tipo_pedido_logosystem(){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+
+        $response = requestCurlLogosystem($conn['url_logosystem']."tipopedido","",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
+}
+
+function atualizar_condicao_pagamento_logosystem(){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+
+        $response = requestCurlLogosystem($conn['url_logosystem']."condpagto","",$conn['token_logosystem'],"GET");
         $response = json_decode($response);
 
         return $response;

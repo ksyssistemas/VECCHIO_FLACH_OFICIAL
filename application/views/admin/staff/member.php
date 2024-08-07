@@ -129,7 +129,7 @@
                                 </div>
                                 <span id="suggestion_id_btv" class="text-info"></span>
                                 <?php $value = (isset($member) ? $member->idBTV : ''); ?>
-                                <?php echo render_input('idBTV', 'staff_add_edit_idBTV', $value,  input_attrs: ["onClick"=>"suggestion_id_btv()"]); ?>
+                                <?php echo render_input('idBTV', 'staff_add_edit_logosystem', $value,  input_attrs: ["onClick"=>"suggestion_id_btv()"]); ?>
                                 <?php $value = (isset($member) ? $member->phonenumber : ''); ?>
                                 <?php echo render_input('phonenumber', 'staff_add_edit_phonenumber', $value); ?>
                                 <div class="form-group">

@@ -669,7 +669,9 @@ $lang['staff_add_edit_password_last_changed'] = 'Senha última vez alterada';
 $lang['staff_add_edit_notes']                 = 'Notas';
 $lang['staff_add_edit_note_description']      = 'descrição da nota';
 $lang['staff_add_edit_idBTV']                 = 'ID do Usuário no Bemtevi';
+$lang['staff_add_edit_logosystem']            = 'ID do Usuário na LogoSystem';
 $lang['staff_idBTV_notfound_assigned']        = 'ID do Bemtevi não vinculado ao usuário ';
+$lang['staff_idlogosystem_notfound_assigned']        = 'ID da LogoSystem não vinculado ao usuário ';
 $lang['staff_idBTV_information_field']        = 'Preenchido via sistema no perfil do usuário';
 $lang['address_not_insert_BTV']               = 'O endereço não foi inserido no Bemtevi, tente novamente.';
 
@@ -1763,6 +1765,7 @@ $lang['proposal_converted_to_invoice_success']  = 'Proposta convertida em fatura
 $lang['proposal_converted_to_estimate_fail']    = 'Falha para converter a Proposta em orçamento';
 $lang['proposal_converted_to_invoice_fail']     = 'Falha para converter a proposta em fatura';
 $lang['proposal_type']                          = 'Tipo de Proposta';
+$lang['proposal_order_type']                    = 'Tipo de Pedido';
 $lang['proposal_payment_terms']                 = 'Condição de pagamento';
 $lang['proposal_shipping_type']                 = 'Tipo de Frete';
 $lang['proposal_delivery_forecast']             = 'Previsão de Entrega';
@@ -1870,6 +1873,9 @@ $lang['form_validation_required']    = 'O {field} campo é necessário.';
 $lang['form_validation_valid_email'] = 'O {field} campo deve conter um endereço de e-mail válido.';
 $lang['form_validation_matches']     = 'O {field} campo não combina com o {param} campo.';
 $lang['form_validation_is_unique']   = 'O {field} campo deve conter um valor único.';
+$lang['rel_type_customer']           = 'O relacionado precisa ser um cliente';
+$lang['required_payment_terms']      = 'O campo Condição de pagamento é necessário.';
+$lang['required_order_type']         = 'O campo Tipo de Pedido é necessário.';
 
 # Version 1.0.8
 # Notifications & Leads/Estimates/Invoices Activity Log
