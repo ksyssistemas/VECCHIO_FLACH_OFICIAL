@@ -490,7 +490,7 @@ function atualizar_tipo_pedido_logosystem(){
 
         $conn = get_integration_variables();
 
-        $response = requestCurlLogosystem($conn['url_logosystem']."tipopedido","",$conn['token_logosystem'],"GET");
+        $response = requestCurlLogosystem($conn['url_logosystem']."tipopedido?alterado_apos=1970-01-01","",$conn['token_logosystem'],"GET");
         $response = json_decode($response);
 
         return $response;
@@ -506,7 +506,7 @@ function atualizar_condicao_pagamento_logosystem(){
 
         $conn = get_integration_variables();
 
-        $response = requestCurlLogosystem($conn['url_logosystem']."condpagto","",$conn['token_logosystem'],"GET");
+        $response = requestCurlLogosystem($conn['url_logosystem']."condpagto?alterado_apos=1970-01-01","",$conn['token_logosystem'],"GET");
         $response = json_decode($response);
 
         return $response;

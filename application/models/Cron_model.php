@@ -94,9 +94,9 @@ class Cron_model extends App_Model
             $this->delete_twocheckout_logs();
             $this->stop_task_timers();
             $this->non_billed_tasks_notification();
-            $this->atualizar_produtos();
             $this->atualizar_tipo_pedido();
             $this->atualizar_condicao_pagamento();
+            $this->atualizar_produtos();
 
             /**
              * Finally send any emails in the email queue - if enabled and any
