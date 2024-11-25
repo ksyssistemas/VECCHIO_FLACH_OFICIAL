@@ -515,3 +515,19 @@ function atualizar_condicao_pagamento_logosystem(){
     return false;
 
 }
+
+function atualizar_clientes_logosystem($date){
+
+    if(integracao_logosystem()){
+
+        $conn = get_integration_variables();
+        
+        $response = requestCurlLogosystem($conn['url_logosystem']."clientes?alterado_apos=".$date,"",$conn['token_logosystem'],"GET");
+        $response = json_decode($response);
+
+        return $response;
+
+    }
+    return false;
+
+}

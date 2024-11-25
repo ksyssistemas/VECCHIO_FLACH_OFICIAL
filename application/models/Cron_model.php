@@ -96,6 +96,7 @@ class Cron_model extends App_Model
             $this->non_billed_tasks_notification();
             $this->atualizar_tipo_pedido();
             $this->atualizar_condicao_pagamento();
+            $this->atualizar_customers_logosystem();
             $this->atualizar_produtos();
 
             /**
@@ -2123,6 +2124,97 @@ class Cron_model extends App_Model
             }
             update_option("last_updated_condicao_pagamento", strtotime("-1 day"));
         }   
+    }
+
+    public function atualizar_customers_logosystem($atualizar_todos_items = false){
+        $ultima_atualizacao_clientes = get_option('last_updated_clientes');
+        if($ultima_atualizacao_clientes == "" || $atualizar_todos_items){
+            $ultima_atualizacao_clientes = "1970-01-01";
+        }else{
+            $ultima_atualizacao_clientes = date('Y-m-d', $ultima_atualizacao_clientes);
+        }
+
+        if(integracao_logosystem()){
+            $clientes = atualizar_clientes_logosystem($ultima_atualizacao_clientes);
+            foreach($clientes as $cliente){
+                $this->db->where('cod_logosystem', $cliente->codigo);
+                $client = $this->db->get(db_prefix() . 'clients')->row_array();
+                $data = array();
+                if(is_null($client)){
+                    $data['cod_logosystem'] = $cliente->codigo;
+                    $data['company'] = $cliente->nome_razao;
+                    $data['fantasy_name'] = $cliente->nome_fantasia;
+                    $data['vat'] = $cliente->cpf_cnpj;
+                    if($cliente->rg != ""){
+                        $data['rg_ie'] = $cliente->rg;
+                    }
+                    if($cliente->inscricao_estadual != ""){
+                        $data['rg_ie'] = $cliente->inscricao_estadual;
+                    }
+                    $data['address'] = $cliente->endereco->rua;
+                    $data['address_number'] = $cliente->endereco->numero;
+                    $data['district'] = $cliente->endereco->bairro;
+                    $data['zip'] = $cliente->endereco->cep;
+                    $data['cod_ibge'] = $cliente->endereco->cidade_ibge;
+                    $data['city'] = $cliente->endereco->cidade;
+                    $data['state'] = $cliente->endereco->estado;
+                    $data['billing_street'] = $cliente->endereco->rua;
+                    $data['billing_zip'] = $cliente->endereco->cep;
+                    $data['billing_city'] = $cliente->endereco->cidade;
+                    $data['billing_state'] = $cliente->endereco->estado;
+                    $data['phonenumber'] = $cliente->endereco->ddd;
+                    $data['phonenumber'] .= $cliente->endereco->fone;
+                    if($cliente->data_nascimento != ""){
+                        $data['date_birth_foundation'] = $cliente->data_nascimento;
+                    }
+                    if($cliente->data_fundacao != ""){
+                        $data['date_birth_foundation'] = $cliente->data_fundacao;
+                    }
+                    $dateLogosystem = str_replace("/", ".", $cliente->data_cadastro);
+                    $data['datecreated'] = date("Y-m-d", strtotime($dateLogosystem));
+ 
+
+                    $this->db->insert(db_prefix() . 'clients', $data);
+                    $id = $this->db->insert_id();
+                }else{
+                    $data['cod_logosystem'] = $cliente->codigo;
+                    $data['company'] = $cliente->nome_razao;
+                    $data['fantasy_name'] = $cliente->nome_fantasia;
+                    $data['vat'] = $cliente->cpf_cnpj;
+                    if($cliente->rg != ""){
+                        $data['rg_ie'] = $cliente->rg;
+                    }
+                    if($cliente->inscricao_estadual != ""){
+                        $data['rg_ie'] = $cliente->inscricao_estadual;
+                    }
+                    $data['address'] = $cliente->endereco->rua;
+                    $data['address_number'] = $cliente->endereco->numero;
+                    $data['district'] = $cliente->endereco->bairro;
+                    $data['zip'] = $cliente->endereco->cep;
+                    $data['cod_ibge'] = $cliente->endereco->cidade_ibge;
+                    $data['city'] = $cliente->endereco->cidade;
+                    $data['state'] = $cliente->endereco->estado;
+                    $data['billing_street'] = $cliente->endereco->rua;
+                    $data['billing_zip'] = $cliente->endereco->cep;
+                    $data['billing_city'] = $cliente->endereco->cidade;
+                    $data['billing_state'] = $cliente->endereco->estado;
+                    $data['phonenumber'] = $cliente->endereco->ddd;
+                    $data['phonenumber'] .= $cliente->endereco->fone;
+                    if($cliente->data_nascimento != ""){
+                        $data['date_birth_foundation'] = $cliente->data_nascimento;
+                    }
+                    if($cliente->data_fundacao != ""){
+                        $data['date_birth_foundation'] = $cliente->data_fundacao;
+                    }
+                    $dateLogosystem = str_replace("/", ".", $cliente->data_cadastro);
+                    $data['datecreated'] = date("Y-m-d", strtotime($dateLogosystem));
+
+                    $this->db->where('userid', $client['userid']);
+                    $success = $this->db->update(db_prefix() .'clients', $data);
+                }
+            }
+            update_option("last_updated_clientes", strtotime("-1 day"));
+        }
     }
   
 }
