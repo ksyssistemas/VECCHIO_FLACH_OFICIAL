@@ -400,6 +400,51 @@ class Leads extends AdminController
             //deixar zip code apenas com numeros
             $data['zip'] = preg_replace('/[^0-9]/', '', $data['zip']);
 
+            //exportar o lead que virou cliente para a base do logosystem como um cliente
+            if ($integracao_logosystem = integracao_logosystem()) {
+                $telefone = $data['phonenumber'];
+                $telefone = preg_replace('/[^0-9]/', '', $telefone);
+                $ddd = substr($telefone, 0, 1);
+                if($ddd == 0){
+                    $ddd = substr($telefone, 1, 2);
+                    $telefone = substr($telefone, 3, 11);
+                }else{
+                    $ddd = substr($telefone, 0, 2);
+                    $telefone = substr($telefone, 2, 11);
+                }
+                $dados = [
+                    "nome" => $data['company'],
+                    "nome_fantasia" => $data['fantasy_name'], 
+                    "cpf_cnpj"=>$data['vat'],
+                    "rg"=>$data['rg'],
+                    "inscricao_estadual"=>$data['ie'],
+                    "email"=>$data['email'],
+                    "rua"=>$data['address'],
+                    "numero"=>$data['address_number'],
+                    "bairro"=>$data['district'],
+                    "cep"=>$data['zip'],
+                    "cidade_ibge"=>$data['cod_ibge'],
+                    "ddd"=>$ddd,
+                    "fone"=>$telefone,
+                    "data_nascimento"=>$data['date_birth_foundation'],
+                ];
+                $add_cliente_logosystem = adicionar_cliente_logosystem($dados);
+                
+                if($add_cliente_logosystem['codigo']){
+                    //deu certo
+                }elseif ($add_cliente_logosystem['msg'] || $add_cliente_logosystem['error']){
+                    if(str_contains($add_cliente_logosystem['error'], "CPF/CNPJ já cadastrado")){
+                        $add_cliente_logosystem['codigo2'] = preg_replace('/\D/', '', $add_cliente_logosystem['error']);
+                    }else{
+                        set_alert('danger', $add_cliente_logosystem['msg'] .' - '.  $add_cliente_logosystem['error']);
+                        redirect(admin_url('leads/index/' . $data['leadid']));
+                    }
+                }else{
+                    set_alert('danger', _l('error_unspecified_API'));
+                    redirect(admin_url('leads/index/' . $data['leadid']));
+                }
+            }
+
             if ($integracao_btv = integracao_btv()) {
                 unset($data['idBTV']);
                 //buscar dados do consultor responsavel
@@ -709,39 +754,16 @@ class Leads extends AdminController
                 }
                 //exportar o lead que virou cliente para a base do logosystem como um cliente
                 if ($integracao_logosystem = integracao_logosystem()) {
-                    $telefone = $data['phonenumber'];
-                    $telefone = preg_replace('/[^0-9]/', '', $telefone);
-                    $ddd = substr($telefone, 0, 1);
-                    if($ddd == 0){
-                        $ddd = substr($telefone, 1, 2);
-                        $telefone = substr($telefone, 3, 11);
-                    }else{
-                        $ddd = substr($telefone, 0, 2);
-                        $telefone = substr($telefone, 2, 11);
+                    if($add_cliente_logosystem['codigo']){
+                        //vinculuar o cliente com o id retornado do logosystem
+                        $this->db->where('userid', $id);
+                        $this->db->update(db_prefix() . 'clients', ['cod_logosystem' => $add_cliente_logosystem['codigo']]);
+                    }elseif ($add_cliente_logosystem['codigo2']){
+                        $this->db->where('userid', $id);
+                        $this->db->update(db_prefix() . 'clients', ['cod_logosystem' => $add_cliente_logosystem['codigo2']]);
+                        set_alert('warning', _l('warning_vat_exists_API'));
                     }
-                    $dados = [
-                        "nome" => $data['company'],
-                        "nome_fantasia" => $data['fantasy_name'], 
-                        "cpf_cnpj"=>$data['vat'],
-                        "rg"=>$data['rg_ie'],
-                        "inscricao_estadual"=>$data['rg_ie'],
-                        "email"=>$data['email'],
-                        "rua"=>$data['address'],
-                        "numero"=>$data['address_number'],
-                        "bairro"=>$data['district'],
-                        "cep"=>$data['zip'],
-                        "cidade_ibge"=>$data['cod_ibge'],
-                        "ddd"=>$ddd,
-                        "fone"=>$telefone,
-                        "data_nascimento"=>$data['date_birth_foundation'],
-                    ];
-                    $add_cliente_logosystem = adicionar_cliente_logosystem($dados);
-                    
-                    //vinculuar o cliente com o id retornado do logosystem
-                    $this->db->where('userid', $id);
-                    $this->db->update(db_prefix() . 'clients', ['cod_logosystem' => $add_cliente_logosystem['codigo']]);
                 }
-
                 redirect(admin_url('clients/client/' . $id));
             }
         }
@@ -1390,6 +1412,9 @@ class Leads extends AdminController
             if($field == "vat"){
                 $value = preg_replace('/[^0-9]/', '', $value);
             }
+            if($field == "ie"){
+                $value = preg_replace('/[^0-9]/', '', $value);
+            }
 
 
             if ($lead_id != '') {
@@ -1421,6 +1446,9 @@ class Leads extends AdminController
                 $value = preg_replace('/[^0-9]/', '', $value);
             }
 
+            if($field == "ie"){
+                $value = preg_replace('/[^0-9]/', '', $value);
+            }
 
             $lead = total_rows(db_prefix() . 'leads', [ $field => $value ]);
             if ($lead_id != '') {

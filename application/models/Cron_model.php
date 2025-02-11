@@ -2089,7 +2089,6 @@ class Cron_model extends App_Model
     public function atualizar_condicao_pagamento($atualizar_todos_items = false){
         $ultima_atualizacao_condicao_pagamento = get_option('last_updated_condicao_pagamento');
         if(integracao_logosystem()){
-            echo"<pre>";
             $condicoes_pagamento = atualizar_condicao_pagamento_logosystem();
             foreach($condicoes_pagamento as $condicao_pagamento){
                 $ultima_alteracao_condicao_pagamento = strtotime($condicao_pagamento->ultima_alteracao);
@@ -2123,7 +2122,7 @@ class Cron_model extends App_Model
                 }
             }
             update_option("last_updated_condicao_pagamento", strtotime("-1 day"));
-        }   
+        }  
     }
 
     public function atualizar_customers_logosystem($atualizar_todos_items = false){
@@ -2134,9 +2133,13 @@ class Cron_model extends App_Model
             $ultima_atualizacao_clientes = date('Y-m-d', $ultima_atualizacao_clientes);
         }
 
+
         if(integracao_logosystem()){
             $clientes = atualizar_clientes_logosystem($ultima_atualizacao_clientes);
             foreach($clientes as $cliente){
+                if($cliente->ativo != 1){
+                    continue;
+                }
                 $this->db->where('cod_logosystem', $cliente->codigo);
                 $client = $this->db->get(db_prefix() . 'clients')->row_array();
                 $data = array();
@@ -2145,12 +2148,14 @@ class Cron_model extends App_Model
                     $data['company'] = $cliente->nome_razao;
                     $data['fantasy_name'] = $cliente->nome_fantasia;
                     $data['vat'] = $cliente->cpf_cnpj;
-                    if($cliente->rg != ""){
-                        $data['rg_ie'] = $cliente->rg;
+                    if($cliente->rg > 1){
+                        $data['ie'] = $cliente->rg;
                     }
-                    if($cliente->inscricao_estadual != ""){
-                        $data['rg_ie'] = $cliente->inscricao_estadual;
+                    if($cliente->inscricao_estadual > 1){
+                        $data['ie'] = $cliente->inscricao_estadual;
                     }
+                    //$data['rg'] = $cliente->rg;
+                    //$data['ie'] = $cliente->inscricao_estadual;
                     $data['address'] = $cliente->endereco->rua;
                     $data['address_number'] = $cliente->endereco->numero;
                     $data['district'] = $cliente->endereco->bairro;
@@ -2158,21 +2163,26 @@ class Cron_model extends App_Model
                     $data['cod_ibge'] = $cliente->endereco->cidade_ibge;
                     $data['city'] = $cliente->endereco->cidade;
                     $data['state'] = $cliente->endereco->estado;
+                    $data['country'] = 32;//Brazil
+                    $data['billing_country'] = 32;//Brazil
                     $data['billing_street'] = $cliente->endereco->rua;
                     $data['billing_zip'] = $cliente->endereco->cep;
                     $data['billing_city'] = $cliente->endereco->cidade;
                     $data['billing_state'] = $cliente->endereco->estado;
                     $data['phonenumber'] = $cliente->endereco->ddd;
                     $data['phonenumber'] .= $cliente->endereco->fone;
-                    if($cliente->data_nascimento != ""){
-                        $data['date_birth_foundation'] = $cliente->data_nascimento;
+                    if($cliente->data_nascimento > 1){
+                        $dateLogosystem_birth = str_replace("/", ".", $cliente->data_nascimento);
+                        $data['date_birth_foundation'] = date("Y-m-d", strtotime($dateLogosystem_birth));
                     }
-                    if($cliente->data_fundacao != ""){
-                        $data['date_birth_foundation'] = $cliente->data_fundacao;
+                    if($cliente->data_fundacao > 1){
+                        $dateLogosystem_fundacao = str_replace("/", ".", $cliente->data_fundacao);
+                        $data['date_birth_foundation'] = date("Y-m-d", strtotime($dateLogosystem_fundacao));
                     }
                     $dateLogosystem = str_replace("/", ".", $cliente->data_cadastro);
                     $data['datecreated'] = date("Y-m-d", strtotime($dateLogosystem));
  
+
 
                     $this->db->insert(db_prefix() . 'clients', $data);
                     $id = $this->db->insert_id();
@@ -2181,11 +2191,11 @@ class Cron_model extends App_Model
                     $data['company'] = $cliente->nome_razao;
                     $data['fantasy_name'] = $cliente->nome_fantasia;
                     $data['vat'] = $cliente->cpf_cnpj;
-                    if($cliente->rg != ""){
-                        $data['rg_ie'] = $cliente->rg;
+                    if($cliente->rg > 1){
+                        $data['ie'] = $cliente->rg;
                     }
-                    if($cliente->inscricao_estadual != ""){
-                        $data['rg_ie'] = $cliente->inscricao_estadual;
+                    if($cliente->inscricao_estadual > 1){
+                        $data['ie'] = $cliente->inscricao_estadual;
                     }
                     $data['address'] = $cliente->endereco->rua;
                     $data['address_number'] = $cliente->endereco->numero;
@@ -2194,20 +2204,25 @@ class Cron_model extends App_Model
                     $data['cod_ibge'] = $cliente->endereco->cidade_ibge;
                     $data['city'] = $cliente->endereco->cidade;
                     $data['state'] = $cliente->endereco->estado;
+                    $data['country'] = 32;//Brazil
+                    $data['billing_country'] = 32;//Brazil
                     $data['billing_street'] = $cliente->endereco->rua;
                     $data['billing_zip'] = $cliente->endereco->cep;
                     $data['billing_city'] = $cliente->endereco->cidade;
                     $data['billing_state'] = $cliente->endereco->estado;
                     $data['phonenumber'] = $cliente->endereco->ddd;
                     $data['phonenumber'] .= $cliente->endereco->fone;
-                    if($cliente->data_nascimento != ""){
-                        $data['date_birth_foundation'] = $cliente->data_nascimento;
+                    if($cliente->data_nascimento > 1){
+                        $dateLogosystem_birth = str_replace("/", ".", $cliente->data_nascimento);
+                        $data['date_birth_foundation'] = date("Y-m-d", strtotime($dateLogosystem_birth));
                     }
-                    if($cliente->data_fundacao != ""){
-                        $data['date_birth_foundation'] = $cliente->data_fundacao;
+                    if($cliente->data_fundacao > 1){
+                        $dateLogosystem_fundacao = str_replace("/", ".", $cliente->data_fundacao);
+                        $data['date_birth_foundation'] = date("Y-m-d", strtotime($dateLogosystem_fundacao));
                     }
                     $dateLogosystem = str_replace("/", ".", $cliente->data_cadastro);
                     $data['datecreated'] = date("Y-m-d", strtotime($dateLogosystem));
+
 
                     $this->db->where('userid', $client['userid']);
                     $success = $this->db->update(db_prefix() .'clients', $data);
