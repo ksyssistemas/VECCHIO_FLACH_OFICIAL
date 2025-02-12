@@ -2149,10 +2149,10 @@ class Cron_model extends App_Model
                     $data['fantasy_name'] = $cliente->nome_fantasia;
                     $data['vat'] = $cliente->cpf_cnpj;
                     if($cliente->rg > 1){
-                        $data['ie'] = $cliente->rg;
+                        $data['rg_ie'] = $cliente->rg;
                     }
                     if($cliente->inscricao_estadual > 1){
-                        $data['ie'] = $cliente->inscricao_estadual;
+                        $data['rg_ie'] = $cliente->inscricao_estadual;
                     }
                     //$data['rg'] = $cliente->rg;
                     //$data['ie'] = $cliente->inscricao_estadual;
@@ -2192,10 +2192,10 @@ class Cron_model extends App_Model
                     $data['fantasy_name'] = $cliente->nome_fantasia;
                     $data['vat'] = $cliente->cpf_cnpj;
                     if($cliente->rg > 1){
-                        $data['ie'] = $cliente->rg;
+                        $data['rg_ie'] = $cliente->rg;
                     }
                     if($cliente->inscricao_estadual > 1){
-                        $data['ie'] = $cliente->inscricao_estadual;
+                        $data['rg_ie'] = $cliente->inscricao_estadual;
                     }
                     $data['address'] = $cliente->endereco->rua;
                     $data['address_number'] = $cliente->endereco->numero;
