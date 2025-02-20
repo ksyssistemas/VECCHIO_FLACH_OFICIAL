@@ -428,6 +428,9 @@ function adicionar_pedido_logosystem($data){
                 "prazo_entrega_inicial"=>$data['proposta']['date'],
                 "prazo_entrega_final"=>$data['prazo_entrega_final'],
                 "itens"=>$data['items'],
+                "tipo_frete"=>$data['proposta']['shipping_type'],
+                "obs_transporte"=>"Previsão de Entrega: "+$data['proposta']['delivery_forecast'],
+
         ];
         $response = requestCurlLogosystem($conn['url_logosystem']."pedidos",json_encode($param),$conn['token_logosystem'],"POST");
         $response = json_decode(json_encode($response),true);

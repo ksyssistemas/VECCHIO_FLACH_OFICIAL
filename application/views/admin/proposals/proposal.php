@@ -200,29 +200,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <?php $proposal_types = array(
-                                            "0" => array(
-                                                "proposal_type_id" => "Sutil Máquinas",
-                                                "proposal_type" => "Sutil Máquinas",
-                                            ), 
-                                            "1" => array(
-                                                "proposal_type_id" => "Carreta Biomassa",
-                                                "proposal_type" => "Carreta Biomassa",
-                                            ),
-                                            "2" => array(
-                                                "proposal_type_id" => "Carreta Resíduos",
-                                                "proposal_type" => "Carreta Resíduos",
-                                            )
-                                        ); ?>
-                                        <?php $selected  = (isset($proposal) ? $proposal->proposal_type : ''); ?>
-                                        <?php echo render_select('proposal_type', $proposal_types, ['proposal_type_id', 'proposal_type'], 'proposal_type', $selected); ?>
-                                    </div>
-                                    <div class="col-md-6">
                                         <?php $value = (isset($proposal) ? $proposal->payment_terms : ''); ?>
                                         <?php echo render_select('payment_terms', $payment_terms_types, ['codigo_logosystem', 'descricao'], 'proposal_payment_terms', $value); ?>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-6">
                                         <?php $value2 = (isset($proposal) ? $proposal->order_type : ''); ?>
                                         <?php echo render_select('order_type', $order_types, ['codigo_logosystem', 'descricao'], 'proposal_order_type', $value2); ?>
@@ -293,12 +273,20 @@
                                     <div class="col-md-6">
                                         <?php $shipping_types = array(
                                             "0" => array(
-                                                "shipping_type_id" => "FOB",
-                                                "shipping_type" => "FOB",
+                                                "shipping_type_id" => "P",
+                                                "shipping_type" => "Emitente",
                                             ), 
                                             "1" => array(
-                                                "shipping_type_id" => "CIF",
-                                                "shipping_type" => "CIF",
+                                                "shipping_type_id" => "A",
+                                                "shipping_type" => "Destinatário",
+                                            ),
+                                            "2" => array(
+                                                "shipping_type_id" => "O",
+                                                "shipping_type" => "Outros",
+                                            ), 
+                                            "3" => array(
+                                                "shipping_type_id" => "N",
+                                                "shipping_type" => "Sem Frete",
                                             )
                                         ); ?>
                                         <?php $selected  = (isset($proposal) ? $proposal->shipping_type : ''); ?>
