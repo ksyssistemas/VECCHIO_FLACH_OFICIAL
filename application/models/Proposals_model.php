@@ -224,6 +224,9 @@ class Proposals_model extends App_Model
         unset($data['format_image']);
         unset($data['new_item_image']);
         unset($data['original_id']);
+        unset($data['item_discount_percent']);
+        unset($data['item_discount_percent2']);
+        unset($data['item_discount_percent3']);
         $this->db->insert(db_prefix() . 'proposals', $data);
         $insert_id = $this->db->insert_id();
 
