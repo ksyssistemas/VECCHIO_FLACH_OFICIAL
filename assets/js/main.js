@@ -7461,6 +7461,10 @@ function add_item_to_table(data, itemid, merge_invoice, bill_expense) {
     
     table_row += '<td><img style="max-width:200px;" id="item_image_img'+item_key+'" src=""></td>';
 
+    table_row += '<td><input type="number" value="'+data.item_discount_percent+'" class="item_discount_percent form-control pull-left input-discount-percent" min="0" max="100" name="newitems[' +item_key +'][item_discount_percent]" onChange="calculate_total();">';
+    table_row += '<input type="number" value="'+data.item_discount_percent2+'" class="item_discount_percent2 form-control pull-left input-discount-percent" min="0" max="100" name="newitems[' +item_key +'][item_discount_percent2]" onChange="calculate_total();">';
+    table_row += '<input type="number" value="'+data.item_discount_percent3+'" class="item_discount_percent3 form-control pull-left input-discount-percent" min="0" max="100" name="newitems[' +item_key +'][item_discount_percent3]" onChange="calculate_total();"></td>';
+
     //table_row += '<td class="taxrate">' + tax_dropdown + "</td>";
 
     table_row +=
@@ -7694,6 +7698,9 @@ function get_item_preview_values() {
   response.item_image = $('.main input[name="item_image"]').val();
   response.format_image = $('.main input[name="format_image"]').val();
   response.original_id = $('.main input[name="original_id"]').val();
+  response.item_discount_percent = $('.main input[name="item_discount_percent"]').val();
+  response.item_discount_percent2 = $('.main input[name="item_discount_percent2"]').val();
+  response.item_discount_percent3 = $('.main input[name="item_discount_percent3"]').val();
   return response;
 }
 
@@ -7719,12 +7726,14 @@ function calculate_total() {
     discount_area = $("#discount_area"),
     adjustment = $('input[name="adjustment"]').val(),
     discount_percent = $('input[name="discount_percent"]').val(),
+    discount_percent2 = $('input[name="discount_percent2"]').val(),
+    discount_percent3 = $('input[name="discount_percent3"]').val(),
     discount_fixed = $('input[name="discount_total"]').val(),
     discount_total_type = $(".discount-total-type.selected"),
     discount_type = $('select[name="discount_type"]').val();
 
   $(".tax-area").remove();
-
+//Soma dos itens
   $.each(rows, function () {
     quantity = $(this).find("[data-quantity]").val();
     if (quantity === "") {
@@ -7736,7 +7745,25 @@ function calculate_total() {
       $(this).find("td.rate input").val() * quantity,
       app.options.decimal_places
     );
+
+    var item_discount_percent = $(this).find("input.item_discount_percent").val();
+    var item_discount_percent2 = $(this).find("input.item_discount_percent2").val();
+    var item_discount_percent3 = $(this).find("input.item_discount_percent3 ").val();
+
     _amount = parseFloat(_amount);
+
+    if(item_discount_percent !== "" &&
+      item_discount_percent != 0 &&
+      discount_total_type.hasClass("discount-type-percent")){
+        _amount = _amount - ((_amount * item_discount_percent) / 100);
+
+        if(item_discount_percent2 !== "" && item_discount_percent2 != 0){
+          _amount = _amount - ((_amount * item_discount_percent2) / 100);
+        }
+        if(item_discount_percent3 !== "" && item_discount_percent3 != 0){
+          _amount = _amount - ((_amount * item_discount_percent3) / 100);
+        }
+    }
 
     $(this).find("td.amount").html(format_money(_amount, true));
     subtotal += _amount;
@@ -7779,6 +7806,12 @@ function calculate_total() {
     discount_total_type.hasClass("discount-type-percent")
   ) {
     total_discount_calculated = (subtotal * discount_percent) / 100;
+      if(discount_percent2 !== "" && discount_percent2 != 0){
+        total_discount_calculated = total_discount_calculated + (((subtotal - total_discount_calculated) * discount_percent2) / 100);
+      }
+      if(discount_percent3 !== "" && discount_percent3 != 0){
+        total_discount_calculated = total_discount_calculated + (((subtotal - total_discount_calculated) * discount_percent3) / 100);
+      }
   } else if (
     discount_fixed !== "" &&
     discount_fixed != 0 &&
@@ -7822,6 +7855,12 @@ function calculate_total() {
     discount_total_type.hasClass("discount-type-percent")
   ) {
     total_discount_calculated = (total * discount_percent) / 100;
+      if(discount_percent2 !== "" && discount_percent2 != 0){
+        total_discount_calculated = total_discount_calculated + (((subtotal - total_discount_calculated) * discount_percent2) / 100);
+      }
+      if(discount_percent3 !== "" && discount_percent3 != 0){
+        total_discount_calculated = total_discount_calculated + (((subtotal - total_discount_calculated) * discount_percent3) / 100);
+      }
   } else if (
     discount_fixed !== "" &&
     discount_fixed != 0 &&

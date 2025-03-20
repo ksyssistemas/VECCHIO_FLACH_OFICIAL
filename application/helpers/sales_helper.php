@@ -689,6 +689,9 @@ function add_new_sales_item_post($item, $rel_id, $rel_type)
                     'item_image'       => $item['item_image'],
                     'format_image'     => $item['format_image'],
                     'original_id'      => $item['original_id'],
+                    'item_discount_percent'      => $item['item_discount_percent'],
+                    'item_discount_percent2'      => $item['item_discount_percent2'],
+                    'item_discount_percent3'      => $item['item_discount_percent3'],
                 ]);
 
     $id = $CI->db->insert_id();
@@ -728,6 +731,9 @@ function update_sales_item_post($item_id, $data, $field = '')
             'rate'             => number_format($data['rate'], get_decimal_places(), '.', ''),
             'qty'              => $data['qty'],
             'unit'             => $data['unit'],
+            'item_discount_percent'             => $data['item_discount_percent'],
+            'item_discount_percent2'             => $data['item_discount_percent2'],
+            'item_discount_percent3'             => $data['item_discount_percent3'],
         ];
     }
 

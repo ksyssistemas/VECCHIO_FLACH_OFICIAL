@@ -56,6 +56,7 @@
                     <th width="10%" class="qty" align="right"><?php echo $qty_heading; ?></th>
                     <th width="15%" align="right"><?php echo _l('estimate_table_rate_heading'); ?></th>
                     <th width="20%" align="right"><?php echo _l('estimate_image'); ?></th>
+                    <th width="10%" align="right"><?php echo _l('estimate_discount'); ?> (%)</th>
                     <th width="10%" align="right"><?php echo _l('estimate_table_amount_heading'); ?></th>
                     <th align="center"><i class="fa fa-cog"></i></th>
                 </tr>
@@ -104,6 +105,9 @@
                      ?>
                         <img style="max-width:200px;" id="item_image_img" src="" data="<?php echo base_url('');?>uploads/proposals/item_"><br>    
                     </td>
+                    <td><input type="number" value="" class="item_discount_percent form-control pull-left input-discount-percent" min="0" max="100" name="item_discount_percent">
+                    <input type="number" value="" class="item_discount_percent2 form-control pull-left input-discount-percent" min="0" max="100" name="item_discount_percent2">
+                    <input type="number" value="" class="item_discount_percent3 form-control pull-left input-discount-percent" min="0" max="100" name="item_discount_percent3"></td>
                     <td></td>
                     <td>
                         <?php
@@ -172,6 +176,9 @@
                                 $table_row .= '<img style="max-width:200px;" id="' . $items_indicator . '[' . $i . ']item_image_img" src="'.base_url("").'uploads/proposals/item_'.$item['original_id'].'/'.$item['item_image'].'">';
                             }
                              $table_row .= '</td>';
+                             $table_row .= '<td><input type="number" value="'.(isset($item['item_discount_percent']) ? $item['item_discount_percent'] : 0).'" class="item_discount_percent form-control pull-left input-discount-percent min="0" max="100" name="'.$items_indicator . '[' . $i . '][item_discount_percent]" onChange="calculate_total();">';
+                             $table_row .= '<input type="number" value="'.(isset($item['item_discount_percent2']) ? $item['item_discount_percent2'] : 0).'" class="item_discount_percent2 form-control pull-left input-discount-percent min="0" max="100" name="'.$items_indicator . '[' . $i . '][item_discount_percent2]" onChange="calculate_total();">';
+                             $table_row .= '<input type="number" value="'.(isset($item['item_discount_percent3']) ? $item['item_discount_percent3'] : 0).'" class="item_discount_percent3 form-control pull-left input-discount-percent min="0" max="100" name="'.$items_indicator . '[' . $i . '][item_discount_percent3]" onChange="calculate_total();"></td>';
                              //$table_row .= '<td class="taxrate">' . $this->misc_model->get_taxes_dropdown_template('' . $items_indicator . '[' . $i . '][taxname][]', $estimate_item_taxes, (isset($is_proposal) ? 'proposal' : 'estimate'), $item['id'], true, $manual) . '</td>';
                              $table_row .= '<td class="amount" align="right">' . $amount . '</td>';
                              $table_row .= '<td><a href="#" class="btn btn-danger pull-left" onclick="delete_item(this,' . $item['id'] . '); return false;"><i class="fa fa-times"></i></a></td>';
@@ -207,6 +214,16 @@
                                         class="form-control pull-left input-discount-percent<?php if (isset($estimate) && !is_sale_discount($estimate, 'percent') && is_sale_discount_applied($estimate)) {
                    echo ' hide';
                } ?>" min="0" max="100" name="discount_percent">
+                                                   <input type="number"
+                                        value="<?php echo(isset($estimate) ? $estimate->discount_percent2 : 0); ?>"
+                                        class="form-control pull-left input-discount-percent<?php if (isset($estimate) && !is_sale_discount($estimate, 'percent') && is_sale_discount_applied($estimate)) {
+                   echo ' hide';
+               } ?>" min="0" max="100" name="discount_percent2" onChange="calculate_total();">
+                                                   <input type="number"
+                                        value="<?php echo(isset($estimate) ? $estimate->discount_percent3 : 0); ?>"
+                                        class="form-control pull-left input-discount-percent<?php if (isset($estimate) && !is_sale_discount($estimate, 'percent') && is_sale_discount_applied($estimate)) {
+                   echo ' hide';
+               } ?>" min="0" max="100" name="discount_percent3" onChange="calculate_total();">
 
                                     <input type="number" data-toggle="tooltip"
                                         data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>"

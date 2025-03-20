@@ -26,10 +26,10 @@ class Proposal_pdf extends App_pdf
             $texto_pagina = "Página $numero_pagina de $quantas_paginas_tem";
             $this->MultiCell(190, 1, '<hr>', 0, 'L', 0, 1, '', '', true, 0, true, true, 40);
             $this->MultiCell(63, 5, '', 0, 'L', 0, 0, '', '', true);
-            $this->MultiCell(63, 5, '<a href="www.sutilmaquinas.com.br"><b>www.sutilmaquinas.com.br</b></a>', 0, 'C', 0, 0, '', '', true, 0, true, true, 40);
+            $this->MultiCell(63, 5, '<a href="flachcarregadores.com.br"><b>flachcarregadores.com.br</b></a>', 0, 'C', 0, 0, '', '', true, 0, true, true, 40);
             $this->MultiCell(71, 5,  $texto_pagina, 0, 'R', 0, 1, '', '', true);
-            $this->MultiCell(63, 5, 'Proposta: '.$this->proposal->id. '                      Rev.: 0', 0, 'L', 0, 0, '' ,'', true);
-            $this->MultiCell(63, 5, '+ 55 ( 49 ) 33200144', 0, 'C', 0, 0, '', '', true);
+            $this->MultiCell(63, 5, 'Proposta: '.$this->proposal->id, 0, 'L', 0, 0, '' ,'', true);
+            $this->MultiCell(63, 5, '(48) 3658-4310', 0, 'C', 0, 0, '', '', true);
             $this->MultiCell(63, 5, _d($this->proposal->date), 0, 'R', 0, 0, '', '', true);
     }
     public function __construct($proposal, $tag = '')
